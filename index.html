@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大促日销看板 · 618 vs 双十一</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f5f3;color:#1a1a18;font-size:14px;line-height:1.6;}
+.pg{max-width:1140px;margin:0 auto;padding:28px 24px 64px;}
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+.htitle{font-size:20px;font-weight:600;color:#1a1a18;}
+.hsub{font-size:12px;color:#888780;margin-top:3px;}
+.badges{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.badge{display:inline-flex;align-items:center;font-size:11px;padding:3px 11px;border-radius:20px;border:0.5px solid #d3d1c7;color:#5f5e5a;background:#fff;}
+.badge.live{border-color:#1D9E75;color:#0f6e56;background:#e1f5ee;}
+.upzone{border:1.5px dashed #d3d1c7;border-radius:12px;padding:18px;text-align:center;cursor:pointer;background:#fff;margin-bottom:24px;transition:border-color .15s,background .15s;}
+.upzone:hover,.upzone.drag{border-color:#378ADD;background:#f0f7ff;}
+.upzone input{display:none;}
+.ul{font-size:13px;color:#5f5e5a;margin-bottom:3px;}
+.ul b{color:#185FA5;font-weight:500;}
+.uh{font-size:11px;color:#b4b2a9;}
+.ust{font-size:11.5px;margin-top:7px;min-height:18px;font-weight:500;}
+.ust.ok{color:#1D9E75;}.ust.err{color:#A32D2D;}.ust.ld{color:#BA7517;}
+.glbl{font-size:10.5px;font-weight:500;color:#b4b2a9;margin-bottom:7px;margin-top:22px;letter-spacing:.04em;text-transform:uppercase;}
+.glbl:first-of-type{margin-top:0;}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:9px;}
+.card{background:#fff;border:0.5px solid #e8e6df;border-radius:10px;padding:12px 14px;}
+.cl{font-size:10.5px;color:#888780;margin-bottom:4px;line-height:1.4;}
+.cv{font-size:20px;font-weight:600;color:#1a1a18;line-height:1.2;}
+.cs{font-size:10.5px;color:#b4b2a9;margin-top:3px;}
+.cd{font-size:11.5px;font-weight:500;margin-top:3px;}
+.up{color:#1D9E75;}.dn{color:#A32D2D;}.nu{color:#888780;}
+.sec{background:#fff;border:0.5px solid #e8e6df;border-radius:12px;padding:18px 20px;margin-top:16px;}
+.sh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.st{font-size:14px;font-weight:600;color:#1a1a18;}
+.sd{font-size:11px;color:#b4b2a9;margin-top:2px;}
+.ctrl-wrap{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.ctrl-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
+.ctrl-label{font-size:10.5px;color:#b4b2a9;white-space:nowrap;}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;}
+.tab{padding:4px 11px;border-radius:6px;border:0.5px solid #d3d1c7;background:transparent;cursor:pointer;font-size:11.5px;color:#888780;font-family:inherit;}
+.tab.on{background:#f1efe8;color:#1a1a18;border-color:#b4b2a9;font-weight:500;}
+.vts{display:flex;gap:3px;}
+.vt{padding:4px 11px;border-radius:6px;border:0.5px solid #9FE1CB;background:transparent;cursor:pointer;font-size:11.5px;color:#0f6e56;font-family:inherit;}
+.vt.on{background:#e1f5ee;color:#0f6e56;border-color:#5DCAA5;font-weight:500;}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:#888780;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+@media(max-width:640px){.two-col{grid-template-columns:1fr;}}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+thead th{font-size:10px;font-weight:500;color:#888780;padding:6px 7px;border-bottom:1px solid #e8e6df;text-align:right;white-space:nowrap;background:#fafaf8;}
+thead th.la{text-align:left;}
+tbody tr:hover{background:#fafaf8;}
+td{padding:5px 7px;border-bottom:0.5px solid #f1efe8;text-align:right;white-space:nowrap;}
+td.la{text-align:left;color:#5f5e5a;font-weight:500;}
+.c11{color:#185FA5;}.c618{color:#993C1D;}
+.rhi{color:#A32D2D;font-weight:500;}
+tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
+.na{color:#d3d1c7;}
+.footer{text-align:center;font-size:11px;color:#c8c6be;margin-top:36px;}
+</style>
+</head>
+<body>
+<div class="pg">
+
+<div class="hdr">
+  <div>
+    <div class="htitle">大促日销看板</div>
+    <div class="hsub">618（5.8–5.31）vs 双十一（10.10–10.31）· 上传 Excel 自动更新全部图表</div>
+  </div>
+  <div class="badges">
+    <span class="badge" id="dbadge">暂无新数据</span>
+    <span class="badge" id="tbadge" style="display:none;"></span>
+  </div>
+</div>
+
+<div class="upzone" id="dz" onclick="document.getElementById('fi').click()" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="ddp(event)">
+  <input type="file" id="fi" accept=".xlsx,.xls" onchange="ofc(event)">
+  <div class="ul"><b>点击上传</b>或拖拽最新 Excel 到此处，所有图表自动刷新</div>
+  <div class="uh">列结构与原表一致即可 · 支持 .xlsx / .xls</div>
+  <div class="ust" id="ust"></div>
+</div>
+
+<div class="glbl">GMV 累计对比</div>
+<div class="cg" id="cg1"></div>
+
+<div class="glbl">退款率对比（有赞整体）</div>
+<div class="cg" id="cg2"></div>
+
+<div class="glbl">品牌退款率（618 累计）</div>
+<div class="cg" id="cg3"></div>
+
+<div class="sec">
+  <div class="sh">
+    <div>
+      <div class="st">趋势对比</div>
+      <div class="sd">实线 = 双十一 · 虚线 = 618（进行中）</div>
+    </div>
+    <div class="ctrl-wrap">
+      <div class="ctrl-row">
+        <span class="ctrl-label">指标</span>
+        <div class="tabs" id="mtabs">
+          <button class="tab on" data-k="yz_gmv">有赞总GMV</button>
+          <button class="tab" data-k="zy_gmv">自营GMV</button>
+          <button class="tab" data-k="lr_gmv">燃料GMV</button>
+          <button class="tab" data-k="idn_gmv">IDN GMV</button>
+          <button class="tab" data-k="ret">退款率</button>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">视图</span>
+        <div class="vts" id="vtabs">
+          <button class="vt on" data-v="daily">每日金额</button>
+          <button class="vt" data-v="cumul">累计趋势</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="leg">
+    <span class="li"><span style="width:18px;height:2px;background:#378ADD;display:inline-block;border-radius:1px;"></span>25年双十一</span>
+    <span class="li"><span style="width:12px;height:0;border-top:2px dashed #D85A30;display:inline-block;"></span>26年618</span>
+  </div>
+  <div style="position:relative;width:100%;height:290px;">
+    <canvas id="cM" role="img" aria-label="大促趋势对比图">大促趋势对比图</canvas>
+  </div>
+</div>
+
+<div class="two-col">
+  <div class="sec" style="margin-top:0;">
+    <div class="sh">
+      <div><div class="st">品牌GMV拆分</div><div class="sd">同期累计对比</div></div>
+    </div>
+    <div style="position:relative;width:100%;height:210px;">
+      <canvas id="cB" role="img" aria-label="品牌GMV对比">品牌GMV对比</canvas>
+    </div>
+  </div>
+  <div class="sec" style="margin-top:0;">
+    <div class="sh">
+      <div><div class="st">退款率趋势</div><div class="sd">(GMV − GSV) / GMV · 有赞整体</div></div>
+    </div>
+    <div style="position:relative;width:100%;height:210px;">
+      <canvas id="cR" role="img" aria-label="退款率趋势">退款率趋势</canvas>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sh">
+    <div><div class="st">逐日明细对比</div><div class="sd">蓝 = 双十一 · 橙 = 618 · 退款率 &gt;15% 标红</div></div>
+  </div>
+  <div class="tbl-wrap" id="tbl">
+    <div style="text-align:center;padding:32px;color:#b4b2a9;">上传 Excel 后显示逐日明细</div>
+  </div>
+</div>
+
+<div class="footer">仅供内部参考 · 数据来源：有赞后台</div>
+</div>
+
+<script>
+var S={d11:null,d618:null,key:'yz_gmv',view:'daily',ch:{}};
+var CM={yz_gmv:'有赞总GMV',zy_gmv:'自营GMV',lr_gmv:'自营-理想燃料GMV',idn_gmv:'自营-IDN GMV'};
+var SEED={
+  '有赞总GMV':[723537.3,691624.89,691467.87,245055.38,363063.27,182033.74,199740.65,227337.97,196592.77,76694.42,126334.31,95583.44,76977.82,379892.99,147680.94,84118.92,93574.41,89986.91,113885.97,182155.23,197169.4,398535.45],
+  '有赞总GSV':[618495.3,600950.08,580847.43,170275.65,301305.23,135449.98,186810.69,214071.73,167422.14,73628.52,89213.42,80415.18,71912.43,354166.58,135197.45,75477.74,85113.11,79519.22,101965.34,167659.55,170030.6,370202.2],
+  '自营GMV':[541731,600059,567186,282311,401779,208929,203300,229158,215612,77972,158642,100537,81435,331172,151205,85080,97596,96291,122418,190579,215088,409363],
+  '自营GSV':[419323.9,511354,489713.77,251681.81,353756.95,186585.7,196338.35,214725.78,194218.3,77400.62,144051.9,94825.93,75998.56,288622.1,130415.52,69692.04,90134.91,89821.2,112814.62,169787.13,185849.8,370782.88],
+  '自营-理想燃料GMV':[10708,14534,5115,92792,206175,87453,114414,123212,114443,23883,41163,22965,30146,20593,26477,8235,18089,21786,13462,82636,30018,65868],
+  '自营-理想燃料GSV':[9907.7,6302.4,3906.37,78617.57,180721.65,79273.4,108302.95,113060.18,96781.9,23559.92,34910.3,21307.23,25478.66,20019.2,25283.12,6610.34,15679.11,21485,12698.12,74192.43,27993.6,60392.38],
+  '自营-IDN GMV':[522560,574543,551778,179460,187698,115392,84502,100764,97097,47459,105027,72323,45356,301020,119368,72642,73075,67205,103270,101396,175303,334921],
+  '自营-IDN GSV':[401141,495102,476337,163237.94,165309,102094,83889,96567,93454,47360,100196,68495,45356,259596,100275,59026,68252,61036,94744,90065,148493,303097]
+};
+
+function buildSeed(){
+  var rows=[];
+  for(var i=0;i<22;i++){
+    var r={'DAY':'day'+(i+1)};
+    Object.keys(SEED).forEach(function(k){r[k]=SEED[k][i];});
+    rows.push(r);
+  }
+  return rows;
+}
+S.d11=buildSeed();
+S.d618=[{
+  '有赞总GMV':866927.24,'有赞总GSV':784656.07,
+  '自营GMV':855684.22,'自营GSV':776200.16,
+  '自营-理想燃料GMV':215010.89,'自营-理想燃料GSV':201237.38,
+  '自营-IDN GMV':624728,'自营-IDN GSV':560099.18
+}];
+
+function f(v,isR){
+  if(v==null||isNaN(v))return'—';
+  if(isR)return(v*100).toFixed(1)+'%';
+  if(Math.abs(v)>=10000)return'¥'+(v/10000).toFixed(1)+'万';
+  return'¥'+Math.round(v).toLocaleString();
+}
+function fpp(a,b){
+  if(a==null||b==null||isNaN(a)||isNaN(b))return{t:'—',c:'nu'};
+  var d=(a-b)*100;
+  return{t:(d>=0?'+':'')+d.toFixed(1)+'pp',c:d<=0?'up':'dn'};
+}
+function fpct(a,b){
+  if(!a||!b||b===0)return{t:'—',c:'nu'};
+  var p=((a/b)-1)*100;
+  return{t:(p>=0?'+':'')+p.toFixed(1)+'%',c:p>=0?'up':'dn'};
+}
+function cu(arr){var s=0;return arr.map(function(v){s+=(v||0);return s;});}
+function gc(rows,k){return rows.map(function(r){return(r&&r[k]!=null)?+r[k]:null;});}
+function rr(g,s){return g.map(function(v,i){if(!v||v===0)return null;return(v-(s[i]||0))/v;});}
+function nh(arr){var c=0;for(var i=0;i<arr.length;i++)if(arr[i]!=null)c++;return c;}
+function pad(arr,n){var a=arr.slice();while(a.length<n)a.push(null);return a;}
+function sm(rows,k,n){return gc(rows,k).slice(0,n).reduce(function(a,b){return a+(b||0);},0);}
+function rc(rows,gk,sk,n){var g=sm(rows,gk,n),s=sm(rows,sk,n);return g>0?(g-s)/g:null;}
+
+function dov(e){e.preventDefault();document.getElementById('dz').classList.add('drag');}
+function dlv(e){document.getElementById('dz').classList.remove('drag');}
+function ddp(e){
+  e.preventDefault();
+  document.getElementById('dz').classList.remove('drag');
+  var f=e.dataTransfer.files[0];
+  if(f)rf(f);
+}
+function ofc(e){if(e.target.files[0])rf(e.target.files[0]);}
+function setSt(t,m){var el=document.getElementById('ust');el.className='ust '+t;el.textContent=m;}
+
+function rf(file){
+  setSt('ld','解析中，请稍候...');
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var rows=XLSX.utils.sheet_to_json(ws,{defval:null});
+      var d11=rows.filter(function(r){return String(r['大促']||'').indexOf('双十一')>-1;});
+      var d618=rows.filter(function(r){return String(r['大促']||'').indexOf('618')>-1;});
+      if(!d11.length&&!d618.length){setSt('err','未识别到数据，请确认"大促"列包含"双十一"或"618"');return;}
+      if(d11.length)S.d11=d11;
+      if(d618.length)S.d618=d618;
+      var n=nh(gc(S.d618,'有赞总GMV'));
+      setSt('ok','已加载 · 双十一 '+S.d11.length+' 天 · 618 已录入 '+n+' 天');
+      var db=document.getElementById('dbadge');db.className='badge live';db.textContent='数据已更新';
+      var tb=document.getElementById('tbadge');tb.style.display='';
+      tb.textContent=new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'更新';
+      renderAll();
+    }catch(err){setSt('err','解析失败：'+err.message);}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderAll(){rC1();rC2();rC3();rMain();rBrand();rRetC();rTable();}
+
+function rC1(){
+  var d11=S.d11,d618=S.d618;
+  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
+  var defs=[
+    {lb:'618累计有赞总GMV',k:'有赞总GMV'},
+    {lb:'618累计自营GMV',k:'自营GMV'},
+    {lb:'618累计理想燃料GMV',k:'自营-理想燃料GMV'},
+    {lb:'618累计IDN GMV',k:'自营-IDN GMV'}
+  ];
+  document.getElementById('cg1').innerHTML=defs.map(function(d){
+    var s618=sm(d618,d.k,n618),s11=sm(d11,d.k,n11),dp=fpct(s618,s11);
+    return'<div class="card"><div class="cl">'+d.lb+'（Day'+n618+'）</div><div class="cv">'+f(s618)+'</div><div class="cs">双十一同期 '+f(s11)+'</div><div class="cd '+dp.c+'">'+dp.t+' vs 双十一</div></div>';
+  }).join('');
+}
+
+function rC2(){
+  var d11=S.d11,d618=S.d618;
+  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
+  var rc618=rc(d618,'有赞总GMV','有赞总GSV',n618);
+  var rc11v=rc(d11,'有赞总GMV','有赞总GSV',n11);
+  var dc=fpp(rc618,rc11v);
+  document.getElementById('cg2').innerHTML=
+    '<div class="card"><div class="cl">618累计退款率（Day'+n618+'）</div><div class="cv">'+f(rc618,true)+'</div><div class="cs">双十一同期累计 '+f(rc11v,true)+'</div><div class="cd '+dc.c+'">'+dc.t+' vs 双十一</div></div>';
+}
+
+function rC3(){
+  var d11=S.d11,d618=S.d618;
+  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
+  var brands=[
+    {lb:'618累计理想燃料退款率',gk:'自营-理想燃料GMV',sk:'自营-理想燃料GSV'},
+    {lb:'618累计IDN退款率',gk:'自营-IDN GMV',sk:'自营-IDN GSV'}
+  ];
+  document.getElementById('cg3').innerHTML=brands.map(function(b){
+    var r618=rc(d618,b.gk,b.sk,n618),r11=rc(d11,b.gk,b.sk,n11),dp=fpp(r618,r11);
+    return'<div class="card"><div class="cl">'+b.lb+'（Day'+n618+'）</div><div class="cv">'+f(r618,true)+'</div><div class="cs">双十一同期 '+f(r11,true)+'</div><div class="cd '+dp.c+'">'+dp.t+' vs 双十一</div></div>';
+  }).join('');
+}
+
+function rMain(){
+  var d11=S.d11,d618=S.d618,N=d11.length;
+  var n618=nh(gc(d618,'有赞总GMV'));
+  var labs=d11.map(function(_,i){return'D'+(i+1);});
+  var isR=S.key==='ret',a11,a618;
+  if(isR){
+    a11=rr(gc(d11,'有赞总GMV'),gc(d11,'有赞总GSV'));
+    a618=pad(rr(gc(d618,'有赞总GMV'),gc(d618,'有赞总GSV')).map(function(v,i){return i<n618?v:null;}),N);
+  }else{
+    var ck=CM[S.key];
+    a11=gc(d11,ck);
+    a618=pad(gc(d618,ck).map(function(v,i){return i<n618?v:null;}),N);
+  }
+  if(S.view==='cumul'&&!isR){
+    a11=cu(a11);
+    a618=pad(cu(a618.map(function(v){return v||0;})).map(function(v,i){return i<n618?v:null;}),N);
+  }
+  var ctx=document.getElementById('cM');
+  if(S.ch.main)S.ch.main.destroy();
+  S.ch.main=new Chart(ctx,{
+    type:'line',
+    data:{labels:labs,datasets:[
+      {label:'双十一',data:a11,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.05)',borderWidth:2,pointRadius:2,pointHoverRadius:4,tension:0.3,fill:S.view==='cumul'&&!isR,spanGaps:false},
+      {label:'618',data:a618,borderColor:'#D85A30',backgroundColor:'rgba(216,90,48,0.05)',borderWidth:2,borderDash:[5,3],pointRadius:3,pointHoverRadius:5,tension:0.3,fill:false,spanGaps:false}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.raw==null)return null;return c.dataset.label+': '+f(c.raw,isR);}}}},
+      scales:{
+        x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10},color:'#888780'},grid:{color:'rgba(136,135,128,0.1)'}},
+        y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return f(v,isR);}},grid:{color:'rgba(136,135,128,0.1)'}}
+      }
+    }
+  });
+}
+
+function rBrand(){
+  var d11=S.d11,d618=S.d618;
+  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
+  var bk=[['理想燃料','自营-理想燃料GMV'],['IDN','自营-IDN GMV']];
+  var ctx=document.getElementById('cB');
+  if(S.ch.brand)S.ch.brand.destroy();
+  S.ch.brand=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:bk.map(function(b){return b[0];}),
+      datasets:[
+        {label:'双十一同期',data:bk.map(function(b){return sm(d11,b[1],n11);}),backgroundColor:'#B5D4F4',borderRadius:4},
+        {label:'618至今',data:bk.map(function(b){return sm(d618,b[1],n618);}),backgroundColor:'#F0997B',borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:9,padding:10}},
+        tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+f(c.raw);}}}
+      },
+      scales:{
+        x:{ticks:{font:{size:12},color:'#5f5e5a'},grid:{display:false}},
+        y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return f(v);}},grid:{color:'rgba(136,135,128,0.1)'}}
+      }
+    }
+  });
+}
+
+function rRetC(){
+  var d11=S.d11,d618=S.d618,N=d11.length;
+  var n618=nh(gc(d618,'有赞总GMV'));
+  var labs=d11.map(function(_,i){return'D'+(i+1);});
+  var ctx=document.getElementById('cR');
+  if(S.ch.ret)S.ch.ret.destroy();
+  S.ch.ret=new Chart(ctx,{
+    type:'line',
+    data:{labels:labs,datasets:[
+      {label:'双十一',data:rr(gc(d11,'有赞总GMV'),gc(d11,'有赞总GSV')),borderColor:'#378ADD',borderWidth:2,pointRadius:2,tension:0.3,fill:false,spanGaps:false},
+      {label:'618',data:pad(rr(gc(d618,'有赞总GMV'),gc(d618,'有赞总GSV')).map(function(v,i){return i<n618?v:null;}),N),borderColor:'#D85A30',borderWidth:2,borderDash:[5,3],pointRadius:3,tension:0.3,fill:false,spanGaps:false}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.raw==null)return null;return c.dataset.label+': '+(c.raw*100).toFixed(1)+'%';}}}},
+      scales:{
+        x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10},color:'#888780'},grid:{color:'rgba(136,135,128,0.1)'}},
+        y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return(v*100).toFixed(0)+'%';}},grid:{color:'rgba(136,135,128,0.1)'}}
+      }
+    }
+  });
+}
+
+function rTable(){
+  var d11=S.d11,d618=S.d618;
+  var N=Math.max(d11.length,d618.length);
+  var n618=nh(gc(d618,'有赞总GMV'));
+  var cols=[
+    {k:'有赞总GMV',lb:'有赞GMV'},
+    {k:'自营GMV',lb:'自营GMV'},
+    {k:'自营-理想燃料GMV',lb:'燃料GMV'},
+    {k:'自营-IDN GMV',lb:'IDN GMV'}
+  ];
+  var h='<table><thead><tr><th class="la" style="width:42px;">Day</th>';
+  cols.forEach(function(c){
+    h+='<th class="c11">'+c.lb+'<br><span style="font-weight:400;font-size:9px;">双十一</span></th>';
+    h+='<th class="c618">'+c.lb+'<br><span style="font-weight:400;font-size:9px;">618</span></th>';
+  });
+  h+='<th>退款率<br><span style="font-weight:400;font-size:9px;">双十一</span></th>';
+  h+='<th>退款率<br><span style="font-weight:400;font-size:9px;">618</span></th>';
+  h+='</tr></thead><tbody>';
+
+  var t11={},t618={};
+  cols.forEach(function(c){t11[c.k]=0;t618[c.k]=0;});
+  var rs11={g:0,s:0},rs618={g:0,s:0};
+
+  for(var i=0;i<N;i++){
+    var r11=d11[i]||{},r618=d618[i]||{},has=i<n618;
+    var g11=r11['有赞总GMV'],s11=r11['有赞总GSV'];
+    var g618=r618['有赞总GMV'],s618=r618['有赞总GSV'];
+    var rv11=(g11&&g11>0)?(g11-(s11||0))/g11:null;
+    var rv618=(has&&g618&&g618>0)?(g618-(s618||0))/g618:null;
+    if(g11){rs11.g+=+g11;rs11.s+=(+s11||0);}
+    if(has&&g618){rs618.g+=+g618;rs618.s+=(+s618||0);}
+    h+='<tr><td class="la">D'+(i+1)+'</td>';
+    cols.forEach(function(c){
+      var v11=(r11[c.k]!=null)?+r11[c.k]:null;
+      var v618=(has&&r618[c.k]!=null)?+r618[c.k]:null;
+      if(v11!=null)t11[c.k]+=v11;
+      if(v618!=null)t618[c.k]+=v618;
+      h+='<td class="c11">'+f(v11)+'</td>';
+      h+='<td class="c618">'+(has?f(v618):'<span class="na">—</span>')+'</td>';
+    });
+    h+='<td class="'+(rv11!=null&&rv11>0.15?'rhi':'')+'">'+f(rv11,true)+'</td>';
+    h+='<td class="'+(rv618!=null&&rv618>0.15?'rhi':'')+'">'+(has?f(rv618,true):'<span class="na">—</span>')+'</td>';
+    h+='</tr>';
+  }
+
+  var tr11=rs11.g>0?(rs11.g-rs11.s)/rs11.g:null;
+  var tr618=rs618.g>0?(rs618.g-rs618.s)/rs618.g:null;
+  h+='<tr class="ttl"><td class="la">合计</td>';
+  cols.forEach(function(c){
+    h+='<td class="c11">'+f(t11[c.k]||null)+'</td>';
+    h+='<td class="c618">'+f(t618[c.k]||null)+'</td>';
+  });
+  h+='<td class="'+(tr11!=null&&tr11>0.15?'rhi':'')+'">'+f(tr11,true)+'</td>';
+  h+='<td class="'+(tr618!=null&&tr618>0.15?'rhi':'')+'">'+f(tr618,true)+'</td>';
+  h+='</tr></tbody></table>';
+  document.getElementById('tbl').innerHTML=h;
+}
+
+document.getElementById('mtabs').addEventListener('click',function(e){
+  var b=e.target.closest('[data-k]');if(!b)return;
+  S.key=b.dataset.k;
+  document.querySelectorAll('#mtabs .tab').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+  if(S.d11)rMain();
+});
+document.getElementById('vtabs').addEventListener('click',function(e){
+  var b=e.target.closest('[data-v]');if(!b)return;
+  S.view=b.dataset.v;
+  document.querySelectorAll('#vtabs .vt').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+  if(S.d11)rMain();
+});
+
+renderAll();
+</script>
+</body>
+</html>
