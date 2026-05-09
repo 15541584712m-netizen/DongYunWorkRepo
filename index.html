@@ -70,7 +70,7 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
 <div class="hdr">
   <div>
     <div class="htitle">大促日销看板</div>
-    <div class="hsub">618（5.8–5.31）vs 双十一（10.10–10.31）· 上传 Excel 自动更新全部图表</div>
+    <div class="hsub">618 vs 双十一 · 已内置最新表格数据 · 上传 Excel 自动更新全部图表</div>
   </div>
   <div class="badges">
     <span class="badge" id="dbadge">暂无新数据</span>
@@ -108,6 +108,8 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
           <button class="tab" data-k="zy_gmv">自营GMV</button>
           <button class="tab" data-k="lr_gmv">燃料GMV</button>
           <button class="tab" data-k="idn_gmv">IDN GMV</button>
+          <button class="tab" data-k="beast_gmv">野兽优选GMV</button>
+          <button class="tab" data-k="refund">有赞退款金额</button>
           <button class="tab" data-k="ret">退款率</button>
         </div>
       </div>
@@ -150,7 +152,7 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
 
 <div class="sec">
   <div class="sh">
-    <div><div class="st">逐日明细对比</div><div class="sd">蓝 = 双十一 · 橙 = 618 · 退款率 &gt;15% 标红</div></div>
+    <div><div class="st">逐日明细对比</div><div class="sd">蓝 = 双十一 · 橙 = 618 · 退款率 &gt;15% 标红 · 已加入退款金额 / 野兽优选</div></div>
   </div>
   <div class="tbl-wrap" id="tbl">
     <div style="text-align:center;padding:32px;color:#b4b2a9;">上传 Excel 后显示逐日明细</div>
@@ -162,67 +164,67 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
 
 <script>
 var S={d11:null,d618:null,key:'yz_gmv',view:'daily',ch:{}};
-var CM={yz_gmv:'有赞总GMV',zy_gmv:'自营GMV',lr_gmv:'自营-理想燃料GMV',idn_gmv:'自营-IDN GMV'};
-var SEED={
-  '有赞总GMV':[723537.3,691624.89,691467.87,245055.38,363063.27,182033.74,199740.65,227337.97,196592.77,76694.42,126334.31,95583.44,76977.82,379892.99,147680.94,84118.92,93574.41,89986.91,113885.97,182155.23,197169.4,398535.45],
-  '有赞总GSV':[618495.3,600950.08,580847.43,170275.65,301305.23,135449.98,186810.69,214071.73,167422.14,73628.52,89213.42,80415.18,71912.43,354166.58,135197.45,75477.74,85113.11,79519.22,101965.34,167659.55,170030.6,370202.2],
-  '自营GMV':[541731,600059,567186,282311,401779,208929,203300,229158,215612,77972,158642,100537,81435,331172,151205,85080,97596,96291,122418,190579,215088,409363],
-  '自营GSV':[419323.9,511354,489713.77,251681.81,353756.95,186585.7,196338.35,214725.78,194218.3,77400.62,144051.9,94825.93,75998.56,288622.1,130415.52,69692.04,90134.91,89821.2,112814.62,169787.13,185849.8,370782.88],
-  '自营-理想燃料GMV':[10708,14534,5115,92792,206175,87453,114414,123212,114443,23883,41163,22965,30146,20593,26477,8235,18089,21786,13462,82636,30018,65868],
-  '自营-理想燃料GSV':[9907.7,6302.4,3906.37,78617.57,180721.65,79273.4,108302.95,113060.18,96781.9,23559.92,34910.3,21307.23,25478.66,20019.2,25283.12,6610.34,15679.11,21485,12698.12,74192.43,27993.6,60392.38],
-  '自营-IDN GMV':[522560,574543,551778,179460,187698,115392,84502,100764,97097,47459,105027,72323,45356,301020,119368,72642,73075,67205,103270,101396,175303,334921],
-  '自营-IDN GSV':[401141,495102,476337,163237.94,165309,102094,83889,96567,93454,47360,100196,68495,45356,259596,100275,59026,68252,61036,94744,90065,148493,303097]
-};
+var CM={yz_gmv:'有赞总GMV',zy_gmv:'自营GMV',lr_gmv:'自营-理想燃料GMV',idn_gmv:'自营-IDN GMV',beast_gmv:'自营-野兽优选 GMV',refund:'有赞退款金额'};
+var INIT_ROWS=[{"大促":"25年双十一","DAY":"day1","时间：日期":45940,"有赞总GMV":828579.3,"有赞退款金额":105042,"有赞GSV":723537.3,"有赞总退款率":0.126773623236786,"自营GMV":541731,"自营GSV":419323.9,"自营总退款率":0.22595550190039,"自营-理想燃料GMV":10708,"自营-IDN GMV":522560,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":9907.7,"自营-IDN GSV":401141,"自营-野兽优选GSV":null,"自营-理想退款率":0.0747385132611131,"自营IDN退款率":0.232354179424372,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day2","时间：日期":45941,"有赞总GMV":782299.7,"有赞退款金额":90674.81,"有赞GSV":691624.89,"有赞总退款率":0.115908020928552,"自营GMV":600059,"自营GSV":511354,"自营总退款率":0.147827130332184,"自营-理想燃料GMV":14534,"自营-IDN GMV":574543,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":6302.4,"自营-IDN GSV":495102,"自营-野兽优选GSV":null,"自营-理想退款率":0.566368515205725,"自营IDN退款率":0.138268153993696,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day3","时间：日期":45942,"有赞总GMV":802088.31,"有赞退款金额":110620.44,"有赞GSV":691467.87,"有赞总退款率":0.137915537006143,"自营GMV":567186,"自营GSV":489713.77,"自营总退款率":0.136590518806882,"自营-理想燃料GMV":5115,"自营-IDN GMV":551778,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":3906.37,"自营-IDN GSV":476337,"自营-野兽优选GSV":null,"自营-理想退款率":0.236291300097752,"自营IDN退款率":0.136723464871742,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day4","时间：日期":45943,"有赞总GMV":319835.11,"有赞退款金额":74779.73,"有赞GSV":245055.38,"有赞总退款率":0.233807132681587,"自营GMV":282311,"自营GSV":251681.81,"自营总退款率":0.108494497203439,"自营-理想燃料GMV":92792,"自营-IDN GMV":179460,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":78617.57,"自营-IDN GSV":163237.94,"自营-野兽优选GSV":null,"自营-理想退款率":0.152754871109578,"自营IDN退款率":0.0903937367658531,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day5","时间：日期":45944,"有赞总GMV":424821.31,"有赞退款金额":61758.04,"有赞GSV":363063.27,"有赞总退款率":0.145374157431038,"自营GMV":401779,"自营GSV":353756.95,"自营总退款率":0.119523544037891,"自营-理想燃料GMV":206175,"自营-IDN GMV":187698,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":180721.65,"自营-IDN GSV":165309,"自营-野兽优选GSV":null,"自营-理想退款率":0.123455074572572,"自营IDN退款率":0.119282038167695,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day6","时间：日期":45945,"有赞总GMV":228617.5,"有赞退款金额":46583.76,"有赞GSV":182033.74,"有赞总退款率":0.203762879044693,"自营GMV":208929,"自营GSV":186585.7,"自营总退款率":0.106942071229939,"自营-理想燃料GMV":87453,"自营-IDN GMV":115392,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":79273.4,"自营-IDN GSV":102094,"自营-野兽优选GSV":null,"自营-理想退款率":0.0935313825712097,"自营IDN退款率":0.115241957848031,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day7","时间：日期":45946,"有赞总GMV":212670.61,"有赞退款金额":12929.96,"有赞GSV":199740.65,"有赞总退款率":0.0607980576159536,"自营GMV":203300,"自营GSV":196338.35,"自营总退款率":0.0342432365961633,"自营-理想燃料GMV":114414,"自营-IDN GMV":84502,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":108302.95,"自营-IDN GSV":83889,"自营-野兽优选GSV":null,"自营-理想退款率":0.0534117328298985,"自营IDN退款率":0.00725426617121488,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day8","时间：日期":45947,"有赞总GMV":240604.21,"有赞退款金额":13266.24,"有赞GSV":227337.97,"有赞总退款率":0.055137189827227,"自营GMV":229158,"自营GSV":214725.78,"自营总退款率":0.0629793417641976,"自营-理想燃料GMV":123212,"自营-IDN GMV":100764,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":113060.18,"自营-IDN GSV":96567,"自营-野兽优选GSV":null,"自营-理想退款率":0.082393111060611,"自营IDN退款率":0.0416517803977611,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day9","时间：日期":45948,"有赞总GMV":225763.4,"有赞退款金额":29145.63,"有赞GSV":196617.77,"有赞总退款率":0.129098117763995,"自营GMV":215612,"自营GSV":194218.3,"自营总退款率":0.099223141569115,"自营-理想燃料GMV":114443,"自营-IDN GMV":97097,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":96781.9,"自营-IDN GSV":93454,"自营-野兽优选GSV":null,"自营-理想退款率":0.154322239018551,"自营IDN退款率":0.0375191818490788,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day10","时间：日期":45949,"有赞总GMV":79760.32,"有赞退款金额":3065.9,"有赞GSV":76694.42,"有赞总退款率":0.038438912983298,"自营GMV":77972,"自营GSV":77400.62,"自营总退款率":0.00732801518493824,"自营-理想燃料GMV":23883,"自营-IDN GMV":47459,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":23559.92,"自营-IDN GSV":47360,"自营-野兽优选GSV":null,"自营-理想退款率":0.0135276137838631,"自营IDN退款率":0.00208601108325081,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day11","时间：日期":45950,"有赞总GMV":163455.2,"有赞退款金额":37120.89,"有赞GSV":126334.31,"有赞总退款率":0.227101309716669,"自营GMV":158642,"自营GSV":144051.9,"自营总退款率":0.0919687094212126,"自营-理想燃料GMV":41163,"自营-IDN GMV":105027,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":34910.3,"自营-IDN GSV":100196,"自营-野兽优选GSV":null,"自营-理想退款率":0.15190097903457,"自营IDN退款率":0.0459976958305959,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day12","时间：日期":45951,"有赞总GMV":110751.7,"有赞退款金额":15168.26,"有赞GSV":95583.44,"有赞总退款率":0.136957355959322,"自营GMV":100537,"自营GSV":94825.93,"自营总退款率":0.0568056536399535,"自营-理想燃料GMV":22965,"自营-IDN GMV":72323,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":21307.23,"自营-IDN GSV":68495,"自营-野兽优选GSV":null,"自营-理想退款率":0.0721868060091444,"自营IDN退款率":0.0529292203033613,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day13","时间：日期":45952,"有赞总GMV":82043.21,"有赞退款金额":5065.39,"有赞GSV":76977.82,"有赞总退款率":0.0617405145410571,"自营GMV":81435,"自营GSV":75998.56,"自营总退款率":0.0667580278749924,"自营-理想燃料GMV":30146,"自营-IDN GMV":45356,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":25478.66,"自营-IDN GSV":45356,"自营-野兽优选GSV":null,"自营-理想退款率":0.154824520666092,"自营IDN退款率":0,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day14","时间：日期":45953,"有赞总GMV":405619.4,"有赞退款金额":25726.41,"有赞GSV":379892.99,"有赞总退款率":0.0634249989029124,"自营GMV":331172,"自营GSV":288622.1,"自营总退款率":0.128482782360828,"自营-理想燃料GMV":20593,"自营-IDN GMV":301020,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":20019.2,"自营-IDN GSV":259596,"自营-野兽优选GSV":null,"自营-理想退款率":0.0278638372262419,"自营IDN退款率":0.137612118796093,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day15","时间：日期":45954,"有赞总GMV":160164.43,"有赞退款金额":12483.49,"有赞GSV":147680.94,"有赞总退款率":0.0779417127760515,"自营GMV":151205,"自营GSV":130415.52,"自营总退款率":0.137492014152971,"自营-理想燃料GMV":26477,"自营-IDN GMV":119368,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":25283.12,"自营-IDN GSV":100275,"自营-野兽优选GSV":null,"自营-理想退款率":0.0450912112399441,"自营IDN退款率":0.159950740566986,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day16","时间：日期":45955,"有赞总GMV":92760.1,"有赞退款金额":8641.18,"有赞GSV":84118.92,"有赞总退款率":0.0931562169510382,"自营GMV":85080,"自营GSV":69692.04,"自营总退款率":0.180864598025388,"自营-理想燃料GMV":8235,"自营-IDN GMV":72642,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":6610.34,"自营-IDN GSV":59026,"自营-野兽优选GSV":null,"自营-理想退款率":0.197287188828172,"自营IDN退款率":0.187439773134,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day17","时间：日期":45956,"有赞总GMV":102035.71,"有赞退款金额":8461.3,"有赞GSV":93574.41,"有赞总退款率":0.0829248897273317,"自营GMV":97596,"自营GSV":90134.91,"自营总退款率":0.0764487274068609,"自营-理想燃料GMV":18089,"自营-IDN GMV":73075,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":15679.11,"自营-IDN GSV":68252,"自营-野兽优选GSV":null,"自营-理想退款率":0.133224058820277,"自营IDN退款率":0.0660006842285323,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day18","时间：日期":45957,"有赞总GMV":100454.6,"有赞退款金额":10467.69,"有赞GSV":89986.91,"有赞总退款率":0.104203192287859,"自营GMV":96291,"自营GSV":89821.2,"自营总退款率":0.0671900800697885,"自营-理想燃料GMV":21786,"自营-IDN GMV":67205,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":21485,"自营-IDN GSV":61036,"自营-野兽优选GSV":null,"自营-理想退款率":0.0138162122463968,"自营IDN退款率":0.0917937653448404,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day19","时间：日期":45958,"有赞总GMV":125806.6,"有赞退款金额":11920.63,"有赞GSV":113885.97,"有赞总退款率":0.0947536138803528,"自营GMV":122418,"自营GSV":112814.62,"自营总退款率":0.0784474505383196,"自营-理想燃料GMV":13462,"自营-IDN GMV":103270,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":12698.12,"自营-IDN GSV":94744,"自营-野兽优选GSV":null,"自营-理想退款率":0.056743425939682,"自营IDN退款率":0.0825602788806042,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day20","时间：日期":45959,"有赞总GMV":196650.91,"有赞退款金额":14495.68,"有赞GSV":182155.23,"有赞总退款率":0.0737127532234659,"自营GMV":190579,"自营GSV":169787.13,"自营总退款率":0.109098431621532,"自营-理想燃料GMV":82636,"自营-IDN GMV":101396,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":74192.43,"自营-IDN GSV":90065,"自营-野兽优选GSV":null,"自营-理想退款率":0.10217786436904,"自营IDN退款率":0.111749970413034,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day21","时间：日期":45960,"有赞总GMV":224308.2,"有赞退款金额":27138.8,"有赞GSV":197169.4,"有赞总退款率":0.120988889394146,"自营GMV":215088,"自营GSV":185849.8,"自营总退款率":0.135935988990553,"自营-理想燃料GMV":30018,"自营-IDN GMV":175303,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":27993.6,"自营-IDN GSV":148493,"自营-野兽优选GSV":null,"自营-理想退款率":0.0674395362782331,"自营IDN退款率":0.152935203618877,"自营野兽优选退款率":null},{"大促":"25年双十一","DAY":"day22","时间：日期":45961,"有赞总GMV":426868.7,"有赞退款金额":28323.35,"有赞GSV":398545.35,"有赞总退款率":0.0663514331221755,"自营GMV":409363,"自营GSV":370782.88,"自营总退款率":0.0942442770841527,"自营-理想燃料GMV":65868,"自营-IDN GMV":334921,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":60392.38,"自营-IDN GSV":303097,"自营-野兽优选GSV":null,"自营-理想退款率":0.0831301997935265,"自营IDN退款率":0.0950194224906769,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day1","时间：日期":46150,"有赞总GMV":866927.24,"有赞退款金额":82246.17,"有赞GSV":784681.07,"有赞总退款率":0.0948709028914583,"自营GMV":855684.22,"自营GSV":776200.16,"自营总退款率":0.0928894773822053,"自营-理想燃料GMV":215010.89,"自营-IDN GMV":624728,"自营-野兽优选 GMV":15945.33,"自营-理想燃料GSV":201237.38,"自营-IDN GSV":560099.18,"自营-野兽优选GSV":14863.6,"自营-理想退款率":0.0640595925164535,"自营IDN退款率":0.103451133933488,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day2","时间：日期":46151,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day3","时间：日期":46152,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day4","时间：日期":46153,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day5","时间：日期":46154,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day6","时间：日期":46155,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day7","时间：日期":46156,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day8","时间：日期":46157,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day9","时间：日期":46158,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day10","时间：日期":46159,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day11","时间：日期":46160,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day12","时间：日期":46161,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day13","时间：日期":46162,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day14","时间：日期":46163,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day15","时间：日期":46164,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day16","时间：日期":46165,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day17","时间：日期":46166,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day18","时间：日期":46167,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day19","时间：日期":46168,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day20","时间：日期":46169,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day21","时间：日期":46170,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day22","时间：日期":46171,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day26","时间：日期":46172,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null},{"大促":"26年618","DAY":"day27","时间：日期":46173,"有赞总GMV":null,"有赞退款金额":null,"有赞GSV":0,"有赞总退款率":null,"自营GMV":null,"自营GSV":null,"自营总退款率":null,"自营-理想燃料GMV":null,"自营-IDN GMV":null,"自营-野兽优选 GMV":null,"自营-理想燃料GSV":null,"自营-IDN GSV":null,"自营-野兽优选GSV":null,"自营-理想退款率":null,"自营IDN退款率":null,"自营野兽优选退款率":null}];
+var BRAND_CFG=[
+  {lb:'理想燃料',gmv:'自营-理想燃料GMV',gsv:'自营-理想燃料GSV',rate:'自营-理想退款率'},
+  {lb:'IDN',gmv:'自营-IDN GMV',gsv:'自营-IDN GSV',rate:'自营IDN退款率'},
+  {lb:'野兽优选',gmv:'自营-野兽优选 GMV',gsv:'自营-野兽优选GSV',rate:'自营野兽优选退款率'}
+];
 
-function buildSeed(){
-  var rows=[];
-  for(var i=0;i<22;i++){
-    var r={'DAY':'day'+(i+1)};
-    Object.keys(SEED).forEach(function(k){r[k]=SEED[k][i];});
-    rows.push(r);
-  }
-  return rows;
+function num(v){
+  if(v==null||v==='')return null;
+  if(typeof v==='string'&&v.charAt(0)==='#')return null;
+  var n=Number(String(v).replace(/,/g,''));
+  return isNaN(n)?null:n;
 }
-S.d11=buildSeed();
-S.d618=[{
-  '有赞总GMV':866927.24,'有赞总GSV':784656.07,
-  '自营GMV':855684.22,'自营GSV':776200.16,
-  '自营-理想燃料GMV':215010.89,'自营-理想燃料GSV':201237.38,
-  '自营-IDN GMV':624728,'自营-IDN GSV':560099.18
-}];
+function cleanRows(rows){
+  return rows.filter(function(r){return r&&r['大促'];}).map(function(r){
+    var o={};Object.keys(r).forEach(function(k){o[k]=r[k];});
+    ['有赞总GMV','有赞退款金额','有赞GSV','有赞总退款率','自营GMV','自营GSV','自营总退款率','自营-理想燃料GMV','自营-IDN GMV','自营-野兽优选 GMV','自营-理想燃料GSV','自营-IDN GSV','自营-野兽优选GSV','自营-理想退款率','自营IDN退款率','自营野兽优选退款率'].forEach(function(k){o[k]=num(o[k]);});
+    return o;
+  });
+}
+function loadRows(rows){
+  rows=cleanRows(rows);
+  var d11=rows.filter(function(r){return String(r['大促']||'').indexOf('双十一')>-1;});
+  var d618=rows.filter(function(r){return String(r['大促']||'').indexOf('618')>-1;});
+  if(d11.length)S.d11=d11;
+  if(d618.length)S.d618=d618;
+}
+loadRows(INIT_ROWS);
 
 function f(v,isR){
+  v=num(v);
   if(v==null||isNaN(v))return'—';
   if(isR)return(v*100).toFixed(1)+'%';
   if(Math.abs(v)>=10000)return'¥'+(v/10000).toFixed(1)+'万';
   return'¥'+Math.round(v).toLocaleString();
 }
 function fpp(a,b){
+  a=num(a);b=num(b);
   if(a==null||b==null||isNaN(a)||isNaN(b))return{t:'—',c:'nu'};
   var d=(a-b)*100;
   return{t:(d>=0?'+':'')+d.toFixed(1)+'pp',c:d<=0?'up':'dn'};
 }
 function fpct(a,b){
-  if(!a||!b||b===0)return{t:'—',c:'nu'};
+  a=num(a);b=num(b);
+  if(a==null||b==null||b===0)return{t:'—',c:'nu'};
   var p=((a/b)-1)*100;
   return{t:(p>=0?'+':'')+p.toFixed(1)+'%',c:p>=0?'up':'dn'};
 }
-function cu(arr){var s=0;return arr.map(function(v){s+=(v||0);return s;});}
-function gc(rows,k){return rows.map(function(r){return(r&&r[k]!=null)?+r[k]:null;});}
-function rr(g,s){return g.map(function(v,i){if(!v||v===0)return null;return(v-(s[i]||0))/v;});}
-function nh(arr){var c=0;for(var i=0;i<arr.length;i++)if(arr[i]!=null)c++;return c;}
+function cu(arr){var s=0;return arr.map(function(v){v=num(v);s+=(v||0);return v==null?null:s;});}
+function gc(rows,k){return rows.map(function(r){return(r&&r[k]!=null)?num(r[k]):null;});}
+function rr(g,s){return g.map(function(v,i){v=num(v);var sv=num(s[i]);if(v==null||v===0)return null;return(v-(sv||0))/v;});}
+function nh(arr){var c=0;for(var i=0;i<arr.length;i++)if(num(arr[i])!=null)c++;return c;}
 function pad(arr,n){var a=arr.slice();while(a.length<n)a.push(null);return a;}
-function sm(rows,k,n){return gc(rows,k).slice(0,n).reduce(function(a,b){return a+(b||0);},0);}
+function sm(rows,k,n){return gc(rows,k).slice(0,n).reduce(function(a,b){return a+(num(b)||0);},0);}
 function rc(rows,gk,sk,n){var g=sm(rows,gk,n),s=sm(rows,sk,n);return g>0?(g-s)/g:null;}
+function cumulRate(rows,gk,sk,n){var out=[],g=0,s=0;for(var i=0;i<n;i++){g+=num(rows[i]&&rows[i][gk])||0;s+=num(rows[i]&&rows[i][sk])||0;out.push(g>0?(g-s)/g:null);}return out;}
 
 function dov(e){e.preventDefault();document.getElementById('dz').classList.add('drag');}
 function dlv(e){document.getElementById('dz').classList.remove('drag');}
-function ddp(e){
-  e.preventDefault();
-  document.getElementById('dz').classList.remove('drag');
-  var f=e.dataTransfer.files[0];
-  if(f)rf(f);
-}
+function ddp(e){e.preventDefault();document.getElementById('dz').classList.remove('drag');var f=e.dataTransfer.files[0];if(f)rf(f);}
 function ofc(e){if(e.target.files[0])rf(e.target.files[0]);}
 function setSt(t,m){var el=document.getElementById('ust');el.className='ust '+t;el.textContent=m;}
 
@@ -234,16 +236,16 @@ function rf(file){
       var wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
       var ws=wb.Sheets[wb.SheetNames[0]];
       var rows=XLSX.utils.sheet_to_json(ws,{defval:null});
-      var d11=rows.filter(function(r){return String(r['大促']||'').indexOf('双十一')>-1;});
-      var d618=rows.filter(function(r){return String(r['大促']||'').indexOf('618')>-1;});
-      if(!d11.length&&!d618.length){setSt('err','未识别到数据，请确认"大促"列包含"双十一"或"618"');return;}
+      var tmp=cleanRows(rows);
+      var d11=tmp.filter(function(r){return String(r['大促']||'').indexOf('双十一')>-1;});
+      var d618=tmp.filter(function(r){return String(r['大促']||'').indexOf('618')>-1;});
+      if(!d11.length&&!d618.length){setSt('err','未识别到数据，请确认“ 大促 ”列包含“双十一”或“618”');return;}
       if(d11.length)S.d11=d11;
       if(d618.length)S.d618=d618;
       var n=nh(gc(S.d618,'有赞总GMV'));
-      setSt('ok','已加载 · 双十一 '+S.d11.length+' 天 · 618 已录入 '+n+' 天');
+      setSt('ok','已加载 · 双十一 '+S.d11.length+' 行 · 618 已录入 '+n+' 天');
       var db=document.getElementById('dbadge');db.className='badge live';db.textContent='数据已更新';
-      var tb=document.getElementById('tbadge');tb.style.display='';
-      tb.textContent=new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'更新';
+      var tb=document.getElementById('tbadge');tb.style.display='';tb.textContent=new Date().toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'更新';
       renderAll();
     }catch(err){setSt('err','解析失败：'+err.message);}
   };
@@ -253,205 +255,80 @@ function rf(file){
 function renderAll(){rC1();rC2();rC3();rMain();rBrand();rRetC();rTable();}
 
 function rC1(){
-  var d11=S.d11,d618=S.d618;
-  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
+  var d11=S.d11,d618=S.d618,n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
   var defs=[
-    {lb:'618累计有赞总GMV',k:'有赞总GMV'},
-    {lb:'618累计自营GMV',k:'自营GMV'},
-    {lb:'618累计理想燃料GMV',k:'自营-理想燃料GMV'},
-    {lb:'618累计IDN GMV',k:'自营-IDN GMV'}
+    {lb:'618累计有赞总GMV',k:'有赞总GMV'},{lb:'618累计自营GMV',k:'自营GMV'},{lb:'618累计理想燃料GMV',k:'自营-理想燃料GMV'},{lb:'618累计IDN GMV',k:'自营-IDN GMV'},{lb:'618累计野兽优选GMV',k:'自营-野兽优选 GMV'},{lb:'618累计有赞退款金额',k:'有赞退款金额'}
   ];
   document.getElementById('cg1').innerHTML=defs.map(function(d){
     var s618=sm(d618,d.k,n618),s11=sm(d11,d.k,n11),dp=fpct(s618,s11);
     return'<div class="card"><div class="cl">'+d.lb+'（Day'+n618+'）</div><div class="cv">'+f(s618)+'</div><div class="cs">双十一同期 '+f(s11)+'</div><div class="cd '+dp.c+'">'+dp.t+' vs 双十一</div></div>';
   }).join('');
 }
-
 function rC2(){
-  var d11=S.d11,d618=S.d618;
-  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
-  var rc618=rc(d618,'有赞总GMV','有赞总GSV',n618);
-  var rc11v=rc(d11,'有赞总GMV','有赞总GSV',n11);
-  var dc=fpp(rc618,rc11v);
+  var d11=S.d11,d618=S.d618,n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
+  var rc618=rc(d618,'有赞总GMV','有赞GSV',n618),rc11v=rc(d11,'有赞总GMV','有赞GSV',n11),dc=fpp(rc618,rc11v);
+  var sr618=rc(d618,'自营GMV','自营GSV',n618),sr11=rc(d11,'自营GMV','自营GSV',n11),sd=fpp(sr618,sr11);
   document.getElementById('cg2').innerHTML=
-    '<div class="card"><div class="cl">618累计退款率（Day'+n618+'）</div><div class="cv">'+f(rc618,true)+'</div><div class="cs">双十一同期累计 '+f(rc11v,true)+'</div><div class="cd '+dc.c+'">'+dc.t+' vs 双十一</div></div>';
+    '<div class="card"><div class="cl">618累计有赞退款率（Day'+n618+'）</div><div class="cv">'+f(rc618,true)+'</div><div class="cs">双十一同期累计 '+f(rc11v,true)+'</div><div class="cd '+dc.c+'">'+dc.t+' vs 双十一</div></div>'+ 
+    '<div class="card"><div class="cl">618累计自营退款率（Day'+n618+'）</div><div class="cv">'+f(sr618,true)+'</div><div class="cs">双十一同期累计 '+f(sr11,true)+'</div><div class="cd '+sd.c+'">'+sd.t+' vs 双十一</div></div>';
 }
-
 function rC3(){
-  var d11=S.d11,d618=S.d618;
-  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
-  var brands=[
-    {lb:'618累计理想燃料退款率',gk:'自营-理想燃料GMV',sk:'自营-理想燃料GSV'},
-    {lb:'618累计IDN退款率',gk:'自营-IDN GMV',sk:'自营-IDN GSV'}
-  ];
-  document.getElementById('cg3').innerHTML=brands.map(function(b){
-    var r618=rc(d618,b.gk,b.sk,n618),r11=rc(d11,b.gk,b.sk,n11),dp=fpp(r618,r11);
-    return'<div class="card"><div class="cl">'+b.lb+'（Day'+n618+'）</div><div class="cv">'+f(r618,true)+'</div><div class="cs">双十一同期 '+f(r11,true)+'</div><div class="cd '+dp.c+'">'+dp.t+' vs 双十一</div></div>';
+  var d11=S.d11,d618=S.d618,n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
+  document.getElementById('cg3').innerHTML=BRAND_CFG.map(function(b){
+    var r618=rc(d618,b.gmv,b.gsv,n618),r11=rc(d11,b.gmv,b.gsv,n11),dp=fpp(r618,r11);
+    return'<div class="card"><div class="cl">618累计'+b.lb+'退款率（Day'+n618+'）</div><div class="cv">'+f(r618,true)+'</div><div class="cs">双十一同期 '+f(r11,true)+'</div><div class="cd '+dp.c+'">'+dp.t+' vs 双十一</div></div>';
   }).join('');
 }
-
 function rMain(){
-  var d11=S.d11,d618=S.d618,N=d11.length;
-  var n618=nh(gc(d618,'有赞总GMV'));
-  var labs=d11.map(function(_,i){return'D'+(i+1);});
+  var d11=S.d11,d618=S.d618,N=Math.max(d11.length,d618.length),n618=nh(gc(d618,'有赞总GMV'));
+  var labs=[];for(var i=0;i<N;i++)labs.push('D'+(i+1));
   var isR=S.key==='ret',a11,a618;
-  if(isR){
-    a11=rr(gc(d11,'有赞总GMV'),gc(d11,'有赞总GSV'));
-    a618=pad(rr(gc(d618,'有赞总GMV'),gc(d618,'有赞总GSV')).map(function(v,i){return i<n618?v:null;}),N);
-  }else{
-    var ck=CM[S.key];
-    a11=gc(d11,ck);
-    a618=pad(gc(d618,ck).map(function(v,i){return i<n618?v:null;}),N);
+  if(isR){a11=rr(gc(d11,'有赞总GMV'),gc(d11,'有赞GSV'));a618=pad(rr(gc(d618,'有赞总GMV'),gc(d618,'有赞GSV')).map(function(v,i){return i<n618?v:null;}),N);}
+  else{var ck=CM[S.key];a11=gc(d11,ck);a618=pad(gc(d618,ck).map(function(v,i){return i<n618?v:null;}),N);}
+  if(S.view==='cumul'){
+    if(isR){a11=cumulRate(d11,'有赞总GMV','有赞GSV',d11.length);a618=pad(cumulRate(d618,'有赞总GMV','有赞GSV',n618),N);}
+    else{a11=cu(a11);a618=pad(cu(a618).map(function(v,i){return i<n618?v:null;}),N);}
   }
-  if(S.view==='cumul'&&!isR){
-    a11=cu(a11);
-    a618=pad(cu(a618.map(function(v){return v||0;})).map(function(v,i){return i<n618?v:null;}),N);
-  }
-  var ctx=document.getElementById('cM');
-  if(S.ch.main)S.ch.main.destroy();
-  S.ch.main=new Chart(ctx,{
-    type:'line',
-    data:{labels:labs,datasets:[
-      {label:'双十一',data:a11,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.05)',borderWidth:2,pointRadius:2,pointHoverRadius:4,tension:0.3,fill:S.view==='cumul'&&!isR,spanGaps:false},
-      {label:'618',data:a618,borderColor:'#D85A30',backgroundColor:'rgba(216,90,48,0.05)',borderWidth:2,borderDash:[5,3],pointRadius:3,pointHoverRadius:5,tension:0.3,fill:false,spanGaps:false}
-    ]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.raw==null)return null;return c.dataset.label+': '+f(c.raw,isR);}}}},
-      scales:{
-        x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10},color:'#888780'},grid:{color:'rgba(136,135,128,0.1)'}},
-        y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return f(v,isR);}},grid:{color:'rgba(136,135,128,0.1)'}}
-      }
-    }
-  });
+  var ctx=document.getElementById('cM');if(S.ch.main)S.ch.main.destroy();
+  S.ch.main=new Chart(ctx,{type:'line',data:{labels:labs,datasets:[{label:'双十一',data:a11,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.05)',borderWidth:2,pointRadius:2,pointHoverRadius:4,tension:0.3,fill:S.view==='cumul'&&!isR,spanGaps:false},{label:'618',data:a618,borderColor:'#D85A30',backgroundColor:'rgba(216,90,48,0.05)',borderWidth:2,borderDash:[5,3],pointRadius:3,pointHoverRadius:5,tension:0.3,fill:false,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.raw==null)return null;return c.dataset.label+': '+f(c.raw,isR);}}}},scales:{x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10},color:'#888780'},grid:{color:'rgba(136,135,128,0.1)'}},y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return f(v,isR);}},grid:{color:'rgba(136,135,128,0.1)'}}}}});
 }
-
 function rBrand(){
-  var d11=S.d11,d618=S.d618;
-  var n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length);
-  var bk=[['理想燃料','自营-理想燃料GMV'],['IDN','自营-IDN GMV']];
-  var ctx=document.getElementById('cB');
+  var d11=S.d11,d618=S.d618,n618=nh(gc(d618,'有赞总GMV')),n11=Math.min(n618,d11.length),ctx=document.getElementById('cB');
   if(S.ch.brand)S.ch.brand.destroy();
-  S.ch.brand=new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:bk.map(function(b){return b[0];}),
-      datasets:[
-        {label:'双十一同期',data:bk.map(function(b){return sm(d11,b[1],n11);}),backgroundColor:'#B5D4F4',borderRadius:4},
-        {label:'618至今',data:bk.map(function(b){return sm(d618,b[1],n618);}),backgroundColor:'#F0997B',borderRadius:4}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:9,padding:10}},
-        tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+f(c.raw);}}}
-      },
-      scales:{
-        x:{ticks:{font:{size:12},color:'#5f5e5a'},grid:{display:false}},
-        y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return f(v);}},grid:{color:'rgba(136,135,128,0.1)'}}
-      }
-    }
-  });
+  S.ch.brand=new Chart(ctx,{type:'bar',data:{labels:BRAND_CFG.map(function(b){return b.lb;}),datasets:[{label:'双十一同期',data:BRAND_CFG.map(function(b){return sm(d11,b.gmv,n11);}),backgroundColor:'#B5D4F4',borderRadius:4},{label:'618至今',data:BRAND_CFG.map(function(b){return sm(d618,b.gmv,n618);}),backgroundColor:'#F0997B',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:9,padding:10}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+f(c.raw);}}}},scales:{x:{ticks:{font:{size:12},color:'#5f5e5a'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return f(v);}},grid:{color:'rgba(136,135,128,0.1)'}}}}});
 }
-
 function rRetC(){
-  var d11=S.d11,d618=S.d618,N=d11.length;
-  var n618=nh(gc(d618,'有赞总GMV'));
-  var labs=d11.map(function(_,i){return'D'+(i+1);});
-  var ctx=document.getElementById('cR');
-  if(S.ch.ret)S.ch.ret.destroy();
-  S.ch.ret=new Chart(ctx,{
-    type:'line',
-    data:{labels:labs,datasets:[
-      {label:'双十一',data:rr(gc(d11,'有赞总GMV'),gc(d11,'有赞总GSV')),borderColor:'#378ADD',borderWidth:2,pointRadius:2,tension:0.3,fill:false,spanGaps:false},
-      {label:'618',data:pad(rr(gc(d618,'有赞总GMV'),gc(d618,'有赞总GSV')).map(function(v,i){return i<n618?v:null;}),N),borderColor:'#D85A30',borderWidth:2,borderDash:[5,3],pointRadius:3,tension:0.3,fill:false,spanGaps:false}
-    ]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.raw==null)return null;return c.dataset.label+': '+(c.raw*100).toFixed(1)+'%';}}}},
-      scales:{
-        x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10},color:'#888780'},grid:{color:'rgba(136,135,128,0.1)'}},
-        y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return(v*100).toFixed(0)+'%';}},grid:{color:'rgba(136,135,128,0.1)'}}
-      }
-    }
-  });
+  var d11=S.d11,d618=S.d618,N=Math.max(d11.length,d618.length),n618=nh(gc(d618,'有赞总GMV')),labs=[];for(var i=0;i<N;i++)labs.push('D'+(i+1));
+  var ctx=document.getElementById('cR');if(S.ch.ret)S.ch.ret.destroy();
+  S.ch.ret=new Chart(ctx,{type:'line',data:{labels:labs,datasets:[{label:'双十一',data:rr(gc(d11,'有赞总GMV'),gc(d11,'有赞GSV')),borderColor:'#378ADD',borderWidth:2,pointRadius:2,tension:0.3,fill:false,spanGaps:false},{label:'618',data:pad(rr(gc(d618,'有赞总GMV'),gc(d618,'有赞GSV')).map(function(v,i){return i<n618?v:null;}),N),borderColor:'#D85A30',borderWidth:2,borderDash:[5,3],pointRadius:3,tension:0.3,fill:false,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.raw==null)return null;return c.dataset.label+': '+(c.raw*100).toFixed(1)+'%';}}}},scales:{x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10},color:'#888780'},grid:{color:'rgba(136,135,128,0.1)'}},y:{ticks:{font:{size:10},color:'#888780',callback:function(v){return(v*100).toFixed(0)+'%';}},grid:{color:'rgba(136,135,128,0.1)'}}}}});
 }
-
 function rTable(){
-  var d11=S.d11,d618=S.d618;
-  var N=Math.max(d11.length,d618.length);
-  var n618=nh(gc(d618,'有赞总GMV'));
-  var cols=[
-    {k:'有赞总GMV',lb:'有赞GMV'},
-    {k:'自营GMV',lb:'自营GMV'},
-    {k:'自营-理想燃料GMV',lb:'燃料GMV'},
-    {k:'自营-IDN GMV',lb:'IDN GMV'}
-  ];
+  var d11=S.d11,d618=S.d618,N=Math.max(d11.length,d618.length),n618=nh(gc(d618,'有赞总GMV'));
+  var cols=[{k:'有赞总GMV',lb:'有赞GMV'},{k:'有赞退款金额',lb:'有赞退款'},{k:'自营GMV',lb:'自营GMV'},{k:'自营-理想燃料GMV',lb:'燃料GMV'},{k:'自营-IDN GMV',lb:'IDN GMV'},{k:'自营-野兽优选 GMV',lb:'野兽优选GMV'}];
   var h='<table><thead><tr><th class="la" style="width:42px;">Day</th>';
-  cols.forEach(function(c){
-    h+='<th class="c11">'+c.lb+'<br><span style="font-weight:400;font-size:9px;">双十一</span></th>';
-    h+='<th class="c618">'+c.lb+'<br><span style="font-weight:400;font-size:9px;">618</span></th>';
-  });
-  h+='<th>退款率<br><span style="font-weight:400;font-size:9px;">双十一</span></th>';
-  h+='<th>退款率<br><span style="font-weight:400;font-size:9px;">618</span></th>';
-  h+='</tr></thead><tbody>';
-
-  var t11={},t618={};
-  cols.forEach(function(c){t11[c.k]=0;t618[c.k]=0;});
-  var rs11={g:0,s:0},rs618={g:0,s:0};
-
+  cols.forEach(function(c){h+='<th class="c11">'+c.lb+'<br><span style="font-weight:400;font-size:9px;">双十一</span></th><th class="c618">'+c.lb+'<br><span style="font-weight:400;font-size:9px;">618</span></th>';});
+  h+='<th>有赞退款率<br><span style="font-weight:400;font-size:9px;">双十一</span></th><th>有赞退款率<br><span style="font-weight:400;font-size:9px;">618</span></th><th>自营退款率<br><span style="font-weight:400;font-size:9px;">双十一</span></th><th>自营退款率<br><span style="font-weight:400;font-size:9px;">618</span></th></tr></thead><tbody>';
+  var t11={},t618={};cols.forEach(function(c){t11[c.k]=0;t618[c.k]=0;});var rs11={g:0,s:0,zg:0,zs:0},rs618={g:0,s:0,zg:0,zs:0};
   for(var i=0;i<N;i++){
-    var r11=d11[i]||{},r618=d618[i]||{},has=i<n618;
-    var g11=r11['有赞总GMV'],s11=r11['有赞总GSV'];
-    var g618=r618['有赞总GMV'],s618=r618['有赞总GSV'];
-    var rv11=(g11&&g11>0)?(g11-(s11||0))/g11:null;
-    var rv618=(has&&g618&&g618>0)?(g618-(s618||0))/g618:null;
-    if(g11){rs11.g+=+g11;rs11.s+=(+s11||0);}
-    if(has&&g618){rs618.g+=+g618;rs618.s+=(+s618||0);}
+    var r11=d11[i]||{},r618=d618[i]||{},has=i<n618,g11=num(r11['有赞总GMV']),s11=num(r11['有赞GSV']),g618=num(r618['有赞总GMV']),s618=num(r618['有赞GSV']),zg11=num(r11['自营GMV']),zs11=num(r11['自营GSV']),zg618=num(r618['自营GMV']),zs618=num(r618['自营GSV']);
+    var rv11=(g11&&g11>0)?(g11-(s11||0))/g11:null,rv618=(has&&g618&&g618>0)?(g618-(s618||0))/g618:null,zv11=(zg11&&zg11>0)?(zg11-(zs11||0))/zg11:null,zv618=(has&&zg618&&zg618>0)?(zg618-(zs618||0))/zg618:null;
+    if(g11){rs11.g+=g11;rs11.s+=(s11||0);} if(zg11){rs11.zg+=zg11;rs11.zs+=(zs11||0);} if(has&&g618){rs618.g+=g618;rs618.s+=(s618||0);} if(has&&zg618){rs618.zg+=zg618;rs618.zs+=(zs618||0);}
     h+='<tr><td class="la">D'+(i+1)+'</td>';
-    cols.forEach(function(c){
-      var v11=(r11[c.k]!=null)?+r11[c.k]:null;
-      var v618=(has&&r618[c.k]!=null)?+r618[c.k]:null;
-      if(v11!=null)t11[c.k]+=v11;
-      if(v618!=null)t618[c.k]+=v618;
-      h+='<td class="c11">'+f(v11)+'</td>';
-      h+='<td class="c618">'+(has?f(v618):'<span class="na">—</span>')+'</td>';
-    });
-    h+='<td class="'+(rv11!=null&&rv11>0.15?'rhi':'')+'">'+f(rv11,true)+'</td>';
-    h+='<td class="'+(rv618!=null&&rv618>0.15?'rhi':'')+'">'+(has?f(rv618,true):'<span class="na">—</span>')+'</td>';
-    h+='</tr>';
+    cols.forEach(function(c){var v11=num(r11[c.k]),v618=has?num(r618[c.k]):null;if(v11!=null)t11[c.k]+=v11;if(v618!=null)t618[c.k]+=v618;h+='<td class="c11">'+f(v11)+'</td><td class="c618">'+(has?f(v618):'<span class="na">—</span>')+'</td>';});
+    h+='<td class="'+(rv11!=null&&rv11>0.15?'rhi':'')+'">'+f(rv11,true)+'</td><td class="'+(rv618!=null&&rv618>0.15?'rhi':'')+'">'+(has?f(rv618,true):'<span class="na">—</span>')+'</td><td class="'+(zv11!=null&&zv11>0.15?'rhi':'')+'">'+f(zv11,true)+'</td><td class="'+(zv618!=null&&zv618>0.15?'rhi':'')+'">'+(has?f(zv618,true):'<span class="na">—</span>')+'</td></tr>';
   }
-
-  var tr11=rs11.g>0?(rs11.g-rs11.s)/rs11.g:null;
-  var tr618=rs618.g>0?(rs618.g-rs618.s)/rs618.g:null;
-  h+='<tr class="ttl"><td class="la">合计</td>';
-  cols.forEach(function(c){
-    h+='<td class="c11">'+f(t11[c.k]||null)+'</td>';
-    h+='<td class="c618">'+f(t618[c.k]||null)+'</td>';
-  });
-  h+='<td class="'+(tr11!=null&&tr11>0.15?'rhi':'')+'">'+f(tr11,true)+'</td>';
-  h+='<td class="'+(tr618!=null&&tr618>0.15?'rhi':'')+'">'+f(tr618,true)+'</td>';
-  h+='</tr></tbody></table>';
+  var tr11=rs11.g>0?(rs11.g-rs11.s)/rs11.g:null,tr618=rs618.g>0?(rs618.g-rs618.s)/rs618.g:null,tz11=rs11.zg>0?(rs11.zg-rs11.zs)/rs11.zg:null,tz618=rs618.zg>0?(rs618.zg-rs618.zs)/rs618.zg:null;
+  h+='<tr class="ttl"><td class="la">合计</td>';cols.forEach(function(c){h+='<td class="c11">'+f(t11[c.k]||null)+'</td><td class="c618">'+f(t618[c.k]||null)+'</td>';});
+  h+='<td class="'+(tr11!=null&&tr11>0.15?'rhi':'')+'">'+f(tr11,true)+'</td><td class="'+(tr618!=null&&tr618>0.15?'rhi':'')+'">'+f(tr618,true)+'</td><td class="'+(tz11!=null&&tz11>0.15?'rhi':'')+'">'+f(tz11,true)+'</td><td class="'+(tz618!=null&&tz618>0.15?'rhi':'')+'">'+f(tz618,true)+'</td></tr></tbody></table>';
   document.getElementById('tbl').innerHTML=h;
 }
 
-document.getElementById('mtabs').addEventListener('click',function(e){
-  var b=e.target.closest('[data-k]');if(!b)return;
-  S.key=b.dataset.k;
-  document.querySelectorAll('#mtabs .tab').forEach(function(x){x.classList.remove('on');});
-  b.classList.add('on');
-  if(S.d11)rMain();
-});
-document.getElementById('vtabs').addEventListener('click',function(e){
-  var b=e.target.closest('[data-v]');if(!b)return;
-  S.view=b.dataset.v;
-  document.querySelectorAll('#vtabs .vt').forEach(function(x){x.classList.remove('on');});
-  b.classList.add('on');
-  if(S.d11)rMain();
-});
+document.getElementById('mtabs').addEventListener('click',function(e){var b=e.target.closest('[data-k]');if(!b)return;S.key=b.dataset.k;document.querySelectorAll('#mtabs .tab').forEach(function(x){x.classList.remove('on');});b.classList.add('on');if(S.d11)rMain();});
+document.getElementById('vtabs').addEventListener('click',function(e){var b=e.target.closest('[data-v]');if(!b)return;S.view=b.dataset.v;document.querySelectorAll('#vtabs .vt').forEach(function(x){x.classList.remove('on');});b.classList.add('on');if(S.d11)rMain();});
 
 renderAll();
+var db=document.getElementById('dbadge');db.className='badge live';db.textContent='已内置最新数据';
+setSt('ok','已内置最新表格数据 · 618 已录入 '+nh(gc(S.d618,'有赞总GMV'))+' 天');
 </script>
 </body>
 </html>
