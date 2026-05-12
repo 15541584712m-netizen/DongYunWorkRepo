@@ -321,28 +321,195 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
     <button class="fbtn" onclick="gFp('IDN',this)">IDN</button>
     <button class="fbtn" onclick="gFp('理想燃料',this)">理想燃料</button>
     <button class="fbtn" onclick="gFp('野兽优选',this)">野兽优选</button>
-    <button class="fbtn" onclick="gFp('only618',this)">仅618有</button>
-    <button class="fbtn" onclick="gFp('onlyd11',this)">仅双十一有</button>
-    <button class="fbtn" onclick="gFp('pos',this)">618更高</button>
-    <button class="fbtn" onclick="gFp('neg',this)">双十一更高</button>
+    <button class="fbtn" onclick="gFp('only618',this)">仅618有 <span style="font-size:10px;opacity:.7;">IDN+燃料</span></button>
+    <button class="fbtn" onclick="gFp('onlyd11',this)">仅双十一有 <span style="font-size:10px;opacity:.7;">IDN+燃料</span></button>
+    <button class="fbtn" onclick="gFp('pos',this)">618更高 <span style="font-size:10px;opacity:.7;">IDN+燃料</span></button>
+    <button class="fbtn" onclick="gFp('neg',this)">双十一更高 <span style="font-size:10px;opacity:.7;">IDN+燃料</span></button>
   </div>
   <div style="overflow-x:auto;">
-    <table class="ptable">
+    <table class="ptable" style="table-layout:fixed;width:100%;">
+      <colgroup>
+        <col style="width:70px;">
+        <col style="width:auto;min-width:0;">
+        <col style="width:80px;">
+        <col style="width:80px;">
+        <col style="width:90px;">
+        <col style="width:90px;">
+        <col style="width:120px;">
+      </colgroup>
       <thead>
         <tr>
-          <th>品牌</th>
-          <th>商品</th>
+          <th style="text-align:left;">品牌</th>
+          <th style="text-align:left;">商品</th>
           <th class="th-right">双十一同期</th>
           <th class="th-right">618至今</th>
-          <th class="th-right" style="min-width:90px;">缺口</th>
-          <th class="th-right" style="min-width:100px;">双十一全程</th>
-          <th style="min-width:120px;">618完成进度</th>
+          <th class="th-right">缺口</th>
+          <th class="th-right">双十一全程</th>
+          <th>618完成进度</th>
         </tr>
       </thead>
       <tbody id="gPtbody"></tbody>
     </table>
   </div>
 </div>
+
+
+<!-- IDN 每日折线图 -->
+<div class="g-sec" id="idn-chart-sec">
+  <div class="sh" style="margin-bottom:4px;">
+    <div>
+      <div class="st">IDN 商品日销对比</div>
+      <div class="sd">点击商品查看双十一 vs 618 每日走势</div>
+    </div>
+  </div>
+
+  <!-- 商品选择按钮 -->
+  <div id="idn-pill-wrap" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;"></div>
+
+  <!-- 图表区 -->
+  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+    <div class="g-metric" style="min-width:140px;flex:1;">
+      <div class="g-metric-label">双十一同期</div>
+      <div class="g-metric-value" id="idn-stat-d11p" style="font-size:18px;">—</div>
+    </div>
+    <div class="g-metric" style="min-width:140px;flex:1;">
+      <div class="g-metric-label">618至今</div>
+      <div class="g-metric-value" id="idn-stat-618" style="font-size:18px;">—</div>
+    </div>
+    <div class="g-metric" style="min-width:140px;flex:1;">
+      <div class="g-metric-label">缺口（618−双十一）</div>
+      <div class="g-metric-value" id="idn-stat-gap" style="font-size:18px;">—</div>
+    </div>
+    <div class="g-metric" style="min-width:140px;flex:1;">
+      <div class="g-metric-label">双十一全程</div>
+      <div class="g-metric-value" id="idn-stat-d11f" style="font-size:18px;">—</div>
+    </div>
+    <div class="g-metric" style="min-width:140px;flex:1;">
+      <div class="g-metric-label">618完成进度</div>
+      <div class="g-metric-value" id="idn-stat-prog" style="font-size:18px;">—</div>
+    </div>
+  </div>
+
+  <div class="g-legend" style="margin-bottom:8px;">
+    <div class="g-legend-item"><span class="g-legend-line" style="background:#2563EB;display:inline-block;"></span><span>双十一（22天，实线）</span></div>
+    <div class="g-legend-item"><svg width="28" height="10" style="display:inline-block;vertical-align:middle;"><line x1="0" y1="5" x2="28" y2="5" stroke="#E87B35" stroke-width="2" stroke-dasharray="5,4"/></svg><span>618（进行中，虚线）</span></div>
+  </div>
+
+  <div style="position:relative;width:100%;height:300px;">
+    <canvas id="idnChart" role="img" aria-label="IDN商品日销对比折线图">IDN商品日销对比</canvas>
+  </div>
+</div>
+
+<script>
+(function(){
+  var IDN_DATA=[{"id": 0, "name": "IDN理想营养 | 多重复合胶原蛋白肽600g/桶 大规格", "d618": [191413.0, 130917.0, 86329.0, 47853.0], "dd11": [1840.0, 4987.0, 274896.0, 78553.0, 54339.0, 28278.0, 25500.0, 36964.0, 21358.0, 19125.0, 34797.0, 21086.0, 11614.0, 22169.0, 21398.0, 13237.0, 22832.0, 17833.0, 42670.0, 29703.0, 47766.0, 83759.0], "total618": 456512.0, "totald11f": 914704.0, "totald11p": 360276.0}, {"id": 1, "name": "IDN理想营养 | 四大成分复配超级Omega-3鱼油磷虾油 120粒/盒", "d618": [144698.0, 54244.0, 37414.0, 26063.0], "dd11": [380577.0, 124991.0, 79764.0, 40329.0, 48333.0, 27004.0, 22046.0, 26793.0, 29257.0, 11669.0, 30499.0, 18512.0, 11983.0, 33238.0, 23135.0, 18495.0, 20512.0, 9161.0, 16483.0, 19834.0, 40263.0, 99134.0], "total618": 262419.0, "totald11f": 1132012.0, "totald11p": 625661.0}, {"id": 2, "name": "IDN理想营养 | 三重复合镁180片/瓶 大规格", "d618": [108556.0, 49220.0, 17283.0, 22154.0], "dd11": [7210.0, 351540.0, 112312.0, 37214.0, 53532.0, 39169.0, 29195.0, 26977.0, 32020.0, 13139.0, 25218.0, 22250.0, 15895.0, 38273.0, 17036.0, 14917.0, 7850.0, 17971.0, 20876.0, 22486.0, 35412.0, 68381.0], "total618": 197213.0, "totald11f": 1008873.0, "totald11p": 508276.0}, {"id": 3, "name": "IDN理想营养 | 黄金组合维生素D3+K2 180粒/瓶 DK D3K2", "d618": [46347.0, 21297.0, 16940.0, 14430.0], "dd11": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 156334.0, 29638.0, 9429.0, 10853.0, 12406.0, 8874.0, 12540.0, 17458.0, 33109.0], "total618": 99014.0, "totald11f": 290641.0, "totald11p": 0.0}, {"id": 4, "name": "IDN理想营养 | 维生素DK镁组合协同作用呵护健康", "d618": [22663.0, 14873.0, 9589.0, 8186.0], "dd11": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total618": 55311.0, "totald11f": 0.0, "totald11p": 0.0}, {"id": 5, "name": "IDN理想营养 | 还原型辅酶Q10 120粒/盒", "d618": [20460.0, 7151.0, 6070.0, 4188.0], "dd11": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total618": 37869.0, "totald11f": 0.0, "totald11p": 0.0}, {"id": 6, "name": "IDN理想营养 | 阳光能量维生素D3 5000IU 360粒/瓶 大规格 VD", "d618": [5552.0, 2085.0, 2523.0, 2082.0], "dd11": [2399.0, 3992.0, 3909.0, 2517.0, 3020.0, 2535.0, 3314.0, 1468.0, 4913.0, 766.0, 2650.0, 2652.0, 2763.0, 3972.0, 3580.0, 1471.0, 3222.0, 1230.0, 2091.0, 827.0, 3247.0, 7948.0], "total618": 12242.0, "totald11f": 64486.0, "totald11p": 12817.0}, {"id": 7, "name": "IDN理想营养 | 维生素C胶囊 1000mg 180粒/瓶", "d618": [0.0, 0.0, 0.0, 0.0], "dd11": [9115.0, 9592.0, 5456.0, 4625.0, 6084.0, 5108.0, 3834.0, 4366.0, 5906.0, 2662.0, 7031.0, 3994.0, 3101.0, 5611.0, 5489.0, 1478.0, 2984.0, 2435.0, 3750.0, 4674.0, 4348.0, 10766.0], "total618": 0.0, "totald11f": 112409.0, "totald11p": 28788.0}];
+  var MAX618=4;
+  var MAXD11=22;
+
+  var gFmtLocal=function(v){
+    if(v==null||v===0)return'—';
+    return'¥'+(v/10000).toFixed(1)+'万';
+  };
+
+  // Build pill buttons
+  var wrap=document.getElementById('idn-pill-wrap');
+  IDN_DATA.forEach(function(p,i){
+    var btn=document.createElement('button');
+    btn.className='fbtn';
+    // Short name: strip brand prefix
+    var short=p.name.replace(/^IDN理想营养\s*[|｜]\s*/,'');
+    if(short.length>18) short=short.slice(0,18)+'…';
+    btn.textContent=short;
+    btn.dataset.idx=i;
+    btn.onclick=function(){
+      document.querySelectorAll('#idn-pill-wrap .fbtn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      renderIDNChart(i);
+    };
+    wrap.appendChild(btn);
+  });
+
+  var idnChart=null;
+
+  function renderIDNChart(idx){
+    var p=IDN_DATA[idx];
+
+    // Stats
+    var gap=p.total618-p.totald11p;
+    var prog=p.totald11f>0?Math.round(p.total618/p.totald11f*100):null;
+    document.getElementById('idn-stat-d11p').textContent=gFmtLocal(p.totald11p);
+    document.getElementById('idn-stat-618').textContent=gFmtLocal(p.total618);
+    var gapEl=document.getElementById('idn-stat-gap');
+    gapEl.textContent=(gap>0?'+':'')+gFmtLocal(Math.abs(gap));
+    gapEl.style.color=gap>=0?'#1a1a18':'#A32D2D';
+    document.getElementById('idn-stat-d11f').textContent=gFmtLocal(p.totald11f);
+    document.getElementById('idn-stat-prog').textContent=prog!=null?(prog+'%'):(p.total618>0?'双十一无':'—');
+
+    // Build labels: max of d11 days
+    var N=MAXD11;
+    var labs=[];
+    for(var i=0;i<N;i++) labs.push('D'+(i+1));
+
+    // 618 series — null-pad for days beyond current
+    var s618=[];
+    for(var i=0;i<N;i++){
+      s618.push(i<MAX618 ? (p.d618[i]||0) : null);
+    }
+
+    var sd11=p.dd11.slice();
+    while(sd11.length<N) sd11.push(null);
+
+    var ctx=document.getElementById('idnChart');
+    if(idnChart) idnChart.destroy();
+    idnChart=new Chart(ctx,{
+      type:'line',
+      data:{
+        labels:labs,
+        datasets:[
+          {
+            label:'双十一',
+            data:sd11,
+            borderColor:'#2563EB',
+            backgroundColor:'rgba(37,99,235,.05)',
+            pointBackgroundColor:'#2563EB',
+            tension:.3,fill:true,borderWidth:2,pointRadius:3,spanGaps:false
+          },
+          {
+            label:'618',
+            data:s618,
+            borderColor:'#E87B35',
+            backgroundColor:'rgba(232,123,53,.06)',
+            pointBackgroundColor:'#E87B35',
+            tension:.3,fill:true,borderWidth:2,pointRadius:4,borderDash:[5,4],spanGaps:false
+          }
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{
+            label:function(c){
+              if(c.raw==null)return null;
+              return c.dataset.label+': ¥'+(c.raw/10000).toFixed(1)+'万';
+            }
+          }}
+        },
+        scales:{
+          x:{grid:{color:'rgba(136,135,128,.1)'},ticks:{color:'#888780',font:{size:10},autoSkip:false,maxRotation:0}},
+          y:{grid:{color:'rgba(136,135,128,.1)'},ticks:{color:'#888780',font:{size:10},callback:function(v){return'¥'+(v/10000).toFixed(0)+'万';}}}
+        }
+      }
+    });
+  }
+
+  // Default: first product
+  if(IDN_DATA.length>0){
+    wrap.querySelectorAll('.fbtn')[0].classList.add('active');
+    renderIDNChart(0);
+  }
+})();
+</script>
 
 <div class="footer">仅供内部参考 · 数据来源：有赞后台 · 商品维度</div>
 </div><!-- /page-goods -->
@@ -474,38 +641,133 @@ function gSwitchTab(t,btn){
 }
 
 var G_PRODUCTS=[
-  {brand:'IDN',name:'多重复合胶原蛋白肽600g/桶 大规格',d11p:360276,g618:456511,d11f:914702,only618:false,onlyd11:false},
-  {brand:'IDN',name:'黄金组合维生素D3+K2 180粒 DK D3K2',d11p:0,g618:99014,d11f:290641,only618:false,onlyd11:false},
-  {brand:'IDN',name:'维生素DK镁组合协同作用呵护健康',d11p:0,g618:55312,d11f:0,only618:true,onlyd11:false},
-  {brand:'IDN',name:'还原型辅酶Q10 120粒/盒（两款合计）',d11p:0,g618:37869,d11f:0,only618:true,onlyd11:false},
-  {brand:'IDN',name:'Omega-3鱼油磷虾油 120粒/盒',d11p:625661,g618:262419,d11f:1083617,only618:false,onlyd11:false},
-  {brand:'IDN',name:'三重复合镁180片/瓶 大规格',d11p:508275,g618:197213,d11f:854985,only618:false,onlyd11:false},
-  {brand:'IDN',name:'维生素C胶囊 1000mg 180粒/瓶',d11p:28789,g618:0,d11f:67753,only618:false,onlyd11:true},
-  {brand:'IDN',name:'阳光能量维生素D3 5000IU 360粒/瓶',d11p:12817,g618:12243,d11f:72419,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮咖啡桶红茶桶年卡（12桶）',d11p:0,g618:85965,d11f:117012,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'大蓝桶年卡（12桶）',d11p:0,g618:44160,d11f:68448,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'复合电解质30条/盒',d11p:4508,g618:41541,d11f:117992,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮咖啡冲饮版桶装900g',d11p:11291,g618:35820,d11f:53166,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'21天断糖计划',d11p:0,g618:11023,d11f:0,only618:true,onlyd11:false},
-  {brand:'理想燃料',name:'60日老友囤货套餐',d11p:0,g618:11129,d11f:9770,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'碳8MCT油 500ml/瓶',d11p:403,g618:14972,d11f:108869,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'大蓝桶900g',d11p:9792,g618:25792,d11f:46217,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮代餐桶装全系',d11p:45973,g618:49942,d11f:168047,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'四重力黑巧6g*15片装',d11p:1067,g618:10258,d11f:74355,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'碳8MCT粉500克/桶',d11p:973,g618:10468,d11f:63993,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮咖啡即饮版 6瓶/15瓶',d11p:1040,g618:10781,d11f:63417,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮咖啡袋装30g*7条',d11p:9479,g618:17890,d11f:32638,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮奶昔红茶桶装900g',d11p:2958,g618:9477,d11f:16999,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮能量包30g*7包装',d11p:5266,g618:3481,d11f:27498,only618:false,onlyd11:false},
-  {brand:'理想燃料',name:'生酮奶昔红茶口味30g*7',d11p:5450,g618:4604,d11f:18254,only618:false,onlyd11:false},
-  {brand:'野兽优选',name:'复合维生素B族60粒',d11p:7104,g618:4715,d11f:21484,only618:false,onlyd11:false},
-  {brand:'野兽优选',name:'GNC维生素C缓释片180片',d11p:1962,g618:327,d11f:9310,only618:false,onlyd11:false},
-  {brand:'野兽优选',name:'诺奥维生素C-1000缓释片100片',d11p:2842,g618:1253,d11f:8268,only618:false,onlyd11:false},
-  {brand:'野兽优选',name:'PQQ 40mg 50粒',d11p:2101,g618:0,d11f:8697,only618:false,onlyd11:true},
-  {brand:'野兽优选',name:'硅基血酮仪KS3',d11p:0,g618:2694,d11f:0,only618:true,onlyd11:false},
-  {brand:'野兽优选',name:'水溶性维生素C粉500g',d11p:4770,g618:5895,d11f:10080,only618:false,onlyd11:false},
+  {brand:"IDN",name:"IDN理想营养 | 黄金组合维生素D3+K2 180粒/瓶 DK D3K2",d11p:0,g618:99014,d11f:290641,gap:99014,only618:false,onlyd11:false},
+  {brand:"IDN",name:"IDN理想营养 | 多重复合胶原蛋白肽600g/桶 大规格",d11p:360276,g618:456511,d11f:914702,gap:96235,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮咖啡桶红茶桶900g/桶 能量续航计划（年卡总计可兑换12桶）",d11p:0,g618:85965,d11f:117012,gap:85965,only618:false,onlyd11:false},
+  {brand:"IDN",name:"IDN理想营养 | 维生素DK镁组合协同作用呵护健康",d11p:0,g618:55312,d11f:0,gap:55312,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮能量桶900g/桶 能量续航计划（年卡总计可兑换12桶）",d11p:0,g618:44160,d11f:68448,gap:44160,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 复合电解质30条/盒 青提葡萄味百香果味",d11p:4508,g618:41541,d11f:117992,gap:37033,only618:false,onlyd11:false},
+  {brand:"IDN",name:"IDN理想营养 | 还原型辅酶Q10 120粒/盒",d11p:0,g618:31046,d11f:0,gap:31046,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料丨生酮咖啡冲饮版桶装900g",d11p:11291,g618:35820,d11f:53166,gap:24529,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料丨生酮能量桶大蓝桶900g",d11p:9792,g618:25792,d11f:46217,gap:16000,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 碳8MCT油 500ml/瓶",d11p:403,g618:14972,d11f:108869,gap:14569,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 60日老友囤货套餐",d11p:0,g618:11129,d11f:9770,gap:11129,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料｜21天断糖计划 3周学会科学低碳生酮",d11p:0,g618:11023,d11f:0,gap:11023,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮咖啡即饮版 6瓶装/15瓶装",d11p:1040,g618:10781,d11f:63417,gap:9741,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 碳8MCT粉500克/桶 生酮饮品搭档不浮油肠胃友好",d11p:973,g618:10468,d11f:63993,gap:9496,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 四重力黑巧6g*15片装",d11p:1067,g618:10258,d11f:74355,gap:9190,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料丨生酮咖啡冲饮版袋装 30g*7条",d11p:9479,g618:17890,d11f:32638,gap:8411,only618:false,onlyd11:false},
+  {brand:"IDN",name:"IDN理想营养 | 还原型辅酶Q10 120粒/盒",d11p:0,g618:6823,d11f:0,gap:6823,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮奶昔醇香红茶口味桶装900g",d11p:2958,g618:9477,d11f:16999,gap:6519,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮代餐冲饮全口味咖啡/红茶/能量桶<桶装版>",d11p:45973,g618:49942,d11f:168047,gap:3969,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜硅基SiBio KS3动态血酮仪持续酮体监测系统",d11p:0,g618:2694,d11f:0,gap:2694,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 沿寿LIFE EXTENSION 复合维生素B族60粒",d11p:4715,g618:7104,d11f:22035,gap:2389,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | NOW诺奥额外强度PQQ（40mg）胶囊 50粒/瓶",d11p:0,g618:2101,d11f:2768,gap:2101,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料丨生酮能量包30g*7包装",d11p:3481,g618:5266,d11f:13172,gap:1785,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | GNC健安喜维生素C缓释片（1000mg）180片/瓶",d11p:327,g618:1962,d11f:872,gap:1635,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜NOW诺奥维生素C-1000玫瑰果缓释片 100片/瓶",d11p:1253,g618:2842,d11f:2742,gap:1589,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 碳8MCT油 6ml*15条",d11p:369,g618:1903,d11f:11986,gap:1534,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮代餐冲饮全口味1+1+1系列<袋装版>",d11p:178,g618:1710,d11f:2435,gap:1532,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料｜四重力黑巧6g*5片",d11p:0,g618:1435,d11f:0,gap:1435,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 微策三合一分析仪血糖血酮尿酸检测试纸（仪器/试纸需选择对应sku购买）",d11p:775,g618:2034,d11f:3702,gap:1259,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 复合电解质便携尝鲜装12条 青提葡萄味百香果味",d11p:0,g618:1062,d11f:0,gap:1062,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 银蕨农场Reserve级牛肉系列（生鲜产品不支持7天无理由退换）",d11p:165,g618:1125,d11f:3528,gap:960,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料｜生酮咖啡即饮版1瓶装",d11p:0,g618:940,d11f:0,gap:940,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜Doctor's Best多特倍斯消化酶复合物素食胶囊 90粒",d11p:807,g618:1735,d11f:2152,gap:928,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮奶昔醇香红茶口味 30g*7",d11p:4604,g618:5450,d11f:17526,gap:846,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜WHC万赫希小超人鱼油 30粒",d11p:0,g618:627,d11f:1483,gap:627,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜袋鼠先生澳洲安格斯牛排脆25g/袋 原味/热辣味/黑松露味",d11p:299,g618:899,d11f:1217,gap:600,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜KEEP MOMENT凯普锐斯原味谷氨酰胺粉 300g/罐",d11p:995,g618:1487,d11f:5339,gap:492,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 四重力黑巧6g*5片",d11p:49,g618:531,d11f:363,gap:482,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料丨生酮咖啡冲饮版桶装900g",d11p:0,g618:378,d11f:0,gap:378,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜Sensory Mill苹果醋500ml（酿造食醋）",d11p:396,g618:763,d11f:1751,gap:367,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜晟麦特级初榨橄榄油500ml/瓶",d11p:0,g618:275,d11f:344,gap:275,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮咖啡冲饮版 30g*2条",d11p:25,g618:285,d11f:961,gap:261,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | NOW诺奥硒片100mcg 100片/瓶",d11p:0,g618:258,d11f:0,gap:258,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜晟麦牛油果油瓶装1L/瓶",d11p:178,g618:427,d11f:1477,gap:249,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 奶酪博士81%干酪高营养减盐浓醇奶酪片 83g（冷藏产品不支持7天无理由退换）",d11p:0,g618:234,d11f:316,gap:234,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 复合电解质便携尝鲜装12条 青提葡萄味百香果味",d11p:221,g618:433,d11f:2067,gap:213,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜Doctor’s Best多特倍斯叶黄素20mg软胶囊 60粒/瓶",d11p:436,g618:636,d11f:1521,gap:200,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜天莱香牛有机牛汤骨中段500g*3袋（生鲜产品不支持7天无理由退换）",d11p:0,g618:198,d11f:594,gap:198,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜天莱香牛有机牛腩牛腿肉 260g*4（生鲜产品不支持7天无理由退换）",d11p:135,g618:318,d11f:135,gap:183,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 赫丽特奇有机初榨椰子油500ml/1000ml",d11p:0,g618:177,d11f:1304,gap:177,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜NOW诺奥盐酸甜菜碱胶囊 648mg 120粒/瓶",d11p:864,g618:1033,d11f:1947,gap:169,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜一酮古早蛋糕100g*2个（短保商品不支持7天无理由退换）",d11p:0,g618:135,d11f:0,gap:135,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮奶昔醇香红茶口味体验装30g*2条",d11p:25,g618:152,d11f:328,gap:127,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 袋鼠先生鸡胸肉丸60g*20袋",d11p:0,g618:120,d11f:120,gap:120,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜一酮铜锣烧65g*1个/份（短保商品不支持7天无理由退换）",d11p:0,g618:117,d11f:0,gap:117,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜一酮榛果布朗尼盒子蛋糕140g/份（短保商品不支持7天无理由退换）",d11p:0,g618:108,d11f:0,gap:108,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜一酮奶酪肉松青团65g*2个组合装（短保商品不支持7天无理由退换）",d11p:0,g618:87,d11f:0,gap:87,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 意帕斯塔 天然水浸黄鳍金枪鱼罐头80g*6（食品特殊性不支持7天无理由退换货）",d11p:0,g618:86,d11f:257,gap:86,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 诺梵每日纯黑巧克力110g/盒（1盒装 / 4盒装）",d11p:299,g618:384,d11f:1245,gap:85,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜卢卡布大粒牛肉酱220g/瓶 香辣/松茸",d11p:0,g618:74,d11f:0,gap:74,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜卢卡布和牛薄脆盒装100g/盒",d11p:0,g618:70,d11f:0,gap:70,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜奶酪博士浓香瀑布马苏里拉奶酪碎200g*2袋（冷藏产品不支持7天无理由退换）",d11p:0,g618:69,d11f:69,gap:69,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料丨碳8MCT油6ml*5条",d11p:0,g618:60,d11f:20,gap:60,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 低卡博士鲜椒牛肉酱",d11p:0,g618:57,d11f:200,gap:57,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 复合电解质便携尝鲜装12条 青提葡萄味百香果味",d11p:0,g618:40,d11f:0,gap:40,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜WHC万赫希小金蛋鱼油 60粒",d11p:418,g618:458,d11f:1065,gap:40,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜一酮花生酱巧克力芝士110g/份（短保商品不支持7天无理由退换",d11p:0,g618:37,d11f:0,gap:37,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 复合电解质便携尝鲜装12条（随理想燃料国内自营产品一起下单，可包邮发出）",d11p:0,g618:27,d11f:0,gap:27,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮咖啡1瓶（随理想燃料国内自营产品一起下单可包邮发出）",d11p:0,g618:25,d11f:50,gap:25,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 生酮咖啡冲饮版 30g*2条",d11p:0,g618:20,d11f:0,gap:20,only618:true,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料丨生酮能量包30g*2条",d11p:108,g618:111,d11f:1468,gap:2,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜卢卡布和牛薄脆盒装100g/盒",d11p:0,g618:0,d11f:449,gap:0,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜VIKpro还原型辅酶Q10软胶囊60粒/盒",d11p:0,g618:0,d11f:1495,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料 |  生酮奶昔即饮版 6/15瓶装",d11p:0,g618:0,d11f:5254,gap:0,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜ConfidenceUSA信心康乐细胞活力三效软胶囊辅酶Q10+喜来芝提取物+PQQ+亚精胺 60粒",d11p:0,g618:0,d11f:588,gap:0,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜乐荷有机干酪 15g/块（冷藏产品不支持7天无理由退换）",d11p:0,g618:0,d11f:618,gap:0,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选 | 三纯焙烤牛肉干200g（食品特殊性非质量问题不支持七天无理由退换）",d11p:0,g618:0,d11f:252,gap:0,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜一酮肉松小贝60g*2个（短保商品不支持7天无理由退换）",d11p:0,g618:0,d11f:272,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料™随行杯月光白670ml",d11p:0,g618:0,d11f:0,gap:0,only618:true,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 袋鼠先生拉丝牛肉块原味/黑胡椒味",d11p:80,g618:80,d11f:320,gap:0,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜晟麦喷雾特级初榨橄榄油220ml/瓶",d11p:0,g618:0,d11f:73,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料 | 7日生酮计划 新手早晚代餐无需挨饿",d11p:0,g618:0,d11f:803,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料 | 生酮能量奶昔30g*5包装",d11p:0,g618:0,d11f:41067,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料｜生酮能量包 30g*1条（试喝装）",d11p:0,g618:0,d11f:0,gap:0,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料™正在生酮T恤",d11p:0,g618:0,d11f:35,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料 | 生酮红茶30g*1条（试喝装）",d11p:0,g618:0,d11f:0,gap:0,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 乐荷有机黄油250g/块（冷鲜产品非质量问题不支持7天无理由退换）",d11p:0,g618:0,d11f:427,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料 | 15日断糖计划™2.0版 科学生酮体重管理方案",d11p:0,g618:0,d11f:1555,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料 | 生酮咖啡冲饮版 30g*1条（试喝装）",d11p:0,g618:0,d11f:0,gap:0,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜放牛童原味香辣味牛脆脆和牛薄脆罐装100g/罐",d11p:0,g618:0,d11f:139,gap:0,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"生酮奶昔1瓶（随理想燃料国内自营产品一起下单可包邮发出）",d11p:25,g618:0,d11f:149,gap:-25,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜卢卡布俄式乳黄瓜罐头330g/罐 低糖微甜/低糖微酸",d11p:25,g618:0,d11f:340,gap:-25,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜Jamieson健美生基础款非全活性配方复合维生素B族缓释片B100 60片/瓶",d11p:765,g618:731,d11f:2907,gap:-34,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 金恩纯香黑猪油265g/瓶",d11p:70,g618:0,d11f:204,gap:-70,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜卢卡布大粒牛肉酱220g/瓶 香辣/松茸",d11p:70,g618:0,d11f:454,gap:-70,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜一酮盐烤杏仁蛋糕140g/份（短保商品不支持7天无理由退换）",d11p:145,g618:74,d11f:548,gap:-71,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 1日生酮计划红茶版/咖啡版 <初体验>",d11p:110,g618:0,d11f:575,gap:-110,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜一酮厚乳芝士夹心饼25g*6个（短保商品不支持7天无理由退换）",d11p:183,g618:72,d11f:1552,gap:-111,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜天莱香牛有机牛杂 500g*3袋（生鲜产品不支持7天无理由退换）",d11p:258,g618:129,d11f:903,gap:-129,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 每日碳8 20ml*15条",d11p:147,g618:0,d11f:1001,gap:-147,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜VIKpro叶黄素软胶囊30粒/盒",d11p:149,g618:0,d11f:2055,gap:-149,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选 | NOW诺奥维生素D3（1000IU）软胶囊180粒/瓶（跨境海淘商品不支持7天无理由）",d11p:150,g618:0,d11f:550,gap:-150,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选 | 生酮猪油渣100g*2盒装（短保商品不支持7天无理由退换）",d11p:350,g618:200,d11f:1950,gap:-150,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜一酮香缇芝士蛋糕130g/份（短保商品不支持7天无理由退换）",d11p:189,g618:37,d11f:940,gap:-152,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜一酮乳酪肉松盒子140g/份（短保商品不支持7天无理由退换）",d11p:207,g618:36,d11f:791,gap:-171,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | MoveFree益节骨胶原 75粒/瓶",d11p:1160,g618:916,d11f:2096,gap:-244,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜卢卡布安格斯牛肉饼48g*10片/盒（生鲜产品不支持7天无理由退换）",d11p:258,g618:0,d11f:435,gap:-258,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜Astaxin虾青素经典款软胶囊 120粒/瓶",d11p:279,g618:0,d11f:558,gap:-279,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜一酮巧克力梦龙卷190g/份（短保商品不支持7天无理由退换）",d11p:467,g618:182,d11f:1887,gap:-285,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | NOW诺奥柠檬酸镁胶囊 120粒/瓶",d11p:474,g618:119,d11f:1767,gap:-355,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选｜NOW诺奥甘氨酸锌软胶囊 120粒/瓶",d11p:456,g618:0,d11f:694,gap:-456,only618:false,onlyd11:true},
+  {brand:"IDN",name:"IDN理想营养 | 阳光能量维生素D3 5000IU 360粒/瓶 大规格 VD",d11p:12817,g618:12243,d11f:64486,gap:-574,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | ConfidenceUSA信心康乐超级辅酶Q10（200mg) 胶囊60粒/瓶",d11p:638,g618:0,d11f:2931,gap:-638,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选 | NYO3诺威佳 阿蒙森磷虾油90粒",d11p:987,g618:0,d11f:987,gap:-987,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选 | NOW诺奥维生素K2胶囊（MK-7型K2：300mcg）60粒/瓶",d11p:2399,g618:1393,d11f:4738,gap:-1006,only618:false,onlyd11:false},
+  {brand:"野兽优选",name:"野兽优选 | 水溶性维生素C粉500g/袋",d11p:5895,g618:4770,d11f:30240,gap:-1125,only618:false,onlyd11:false},
+  {brand:"理想燃料",name:"理想燃料 | 定制纯肉肠70g*15根装（猪肉含量≥90%）【冷冻食品 不支持7天无理由退换货】",d11p:1169,g618:0,d11f:13194,gap:-1169,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜Doctor’s Best 多特倍斯L-肌肽锌复合物胶囊  120粒/瓶",d11p:1344,g618:0,d11f:2459,gap:-1344,only618:false,onlyd11:true},
+  {brand:"理想燃料",name:"理想燃料 | 21日生酮套餐 科学周期焕新体态拒绝挨饿",d11p:1346,g618:0,d11f:5513,gap:-1346,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜净酮说猪肉魔芋饺子 每盒10个 约230g/盒（冷冻食品不支持7天无理由退换货）",d11p:1408,g618:0,d11f:2592,gap:-1408,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选 | Doctor's Best多特倍斯高吸收甘氨酸镁片100mg*120片",d11p:1700,g618:0,d11f:7275,gap:-1700,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选｜VIKpro槲皮素胶囊 60粒/盒",d11p:2500,g618:0,d11f:8326,gap:-2500,only618:false,onlyd11:true},
+  {brand:"野兽优选",name:"野兽优选 | NatureSpan倍能适超级辅酶Q10+PQQ胶囊30粒/瓶",d11p:2854,g618:0,d11f:5387,gap:-2854,only618:false,onlyd11:true},
+  {brand:"IDN",name:"IDN理想营养 | 维生素C胶囊 1000mg 180粒/瓶",d11p:28789,g618:0,d11f:112409,gap:-28789,only618:false,onlyd11:true},
+  {brand:"IDN",name:"IDN理想营养 | 三重复合镁180片/瓶 大规格",d11p:508275,g618:197213,d11f:1008871,gap:-311063,only618:false,onlyd11:false},
+  {brand:"IDN",name:"IDN理想营养 | 四大成分复配超级Omega-3鱼油磷虾油 120粒/盒",d11p:625661,g618:262419,d11f:1132013,gap:-363242,only618:false,onlyd11:false}
 ];
-G_PRODUCTS.forEach(function(p){p.gap=p.g618-p.d11p;});
 
 var gCurFilter='all';
 function gFp(f,btn){
@@ -516,15 +778,23 @@ function gFp(f,btn){
 }
 
 function gRenderTable(){
-  var data=G_PRODUCTS.slice();
+  var CORE=['IDN','理想燃料'];
+  var data=G_PRODUCTS.filter(function(p){
+    // 过滤理想燃料中618≤1元且d11f=0的极小金额商品
+    if(p.brand==='理想燃料' && p.g618<=1 && p.d11f===0) return false;
+    // 过滤两个活动金额都是0的
+    if(p.g618===0 && p.d11p===0 && p.d11f===0) return false;
+    return true;
+  });
   if(gCurFilter==='IDN') data=data.filter(function(p){return p.brand==='IDN';});
   else if(gCurFilter==='理想燃料') data=data.filter(function(p){return p.brand==='理想燃料';});
   else if(gCurFilter==='野兽优选') data=data.filter(function(p){return p.brand==='野兽优选';});
-  else if(gCurFilter==='only618') data=data.filter(function(p){return p.only618;});
-  else if(gCurFilter==='onlyd11') data=data.filter(function(p){return p.onlyd11;});
-  else if(gCurFilter==='pos') data=data.filter(function(p){return p.gap>0;});
-  else if(gCurFilter==='neg') data=data.filter(function(p){return p.gap<0;});
-  data.sort(function(a,b){return b.gap-a.gap;});
+  else if(gCurFilter==='only618') data=data.filter(function(p){return p.only618&&CORE.indexOf(p.brand)>-1;});
+  else if(gCurFilter==='onlyd11') data=data.filter(function(p){return p.onlyd11&&CORE.indexOf(p.brand)>-1;});
+  else if(gCurFilter==='pos') data=data.filter(function(p){return p.gap>0&&CORE.indexOf(p.brand)>-1;});
+  else if(gCurFilter==='neg') data=data.filter(function(p){return p.gap<0&&CORE.indexOf(p.brand)>-1;});
+  // Sort by 618至今金额 desc
+  data.sort(function(a,b){return b.g618-a.g618;});
 
   document.getElementById('gPtbody').innerHTML=data.map(function(p){
     var bc=p.brand==='IDN'?'b-idn':p.brand==='理想燃料'?'b-yr':'b-yx';
@@ -537,13 +807,13 @@ function gRenderTable(){
     var progLabel=p.d11f>0?(Math.round((p.g618/p.d11f)*100)+'%'):(p.g618>0?'双十一无':'-');
     var overClass=progOver?' over':'';
     return '<tr>'
-      +'<td><span class="pbadge '+bc+'">'+p.brand+'</span></td>'
-      +'<td style="font-size:11px;color:#5f5e5a;max-width:220px;word-break:break-all;">'+p.name+onlyTag+'</td>'
+      +'<td style="white-space:nowrap;"><span class="pbadge '+bc+'">'+p.brand+'</span></td>'
+      +'<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:#5f5e5a;">'+p.name+onlyTag+'</td>'
       +'<td class="td-right" style="white-space:nowrap;font-size:12px;">'+(p.d11p>0?gFmt(p.d11p):'—')+'</td>'
       +'<td class="td-right" style="white-space:nowrap;font-size:12px;">'+(p.g618>0?gFmt(p.g618):'—')+'</td>'
       +'<td class="td-right" style="white-space:nowrap;font-size:12px;"><span style="'+gapStyle+'">'+gapStr+'</span></td>'
       +'<td class="td-right" style="white-space:nowrap;font-size:12px;">'+(p.d11f>0?gFmt(p.d11f):'—')+'</td>'
-      +'<td style="min-width:120px;padding-right:12px;">'
+      +'<td style="min-width:110px;padding-right:12px;">'
         +'<div style="display:flex;align-items:center;gap:6px;">'
           +'<div class="prog-bg" style="flex:1;"><div class="prog-fill'+overClass+'" style="width:'+progPct.toFixed(1)+'%;"></div></div>'
           +'<span style="font-size:11px;color:#888780;min-width:34px;text-align:right;">'+progLabel+'</span>'
