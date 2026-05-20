@@ -119,6 +119,48 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
 .prog-bg{background:#e8e6df;border-radius:2px;height:4px;margin-top:3px;width:100%;}
 .prog-fill{height:4px;border-radius:2px;background:#E87B35;max-width:100%;}
 .prog-fill.over{background:#A32D2D;}
+<!-- L6_QW_START -->
+/* ── 企微L6下单情况：保留原看板样式，全部加 l6 前缀避免互相覆盖 ── */
+.l6-page{max-width:1100px;margin:0 auto;padding:28px 24px 34px;background:#F5F6F8;color:#1a1a1a;font-size:14px;line-height:1.45;}
+.l6-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;gap:16px;}
+.l6-header-title{font-size:20px;font-weight:600;color:#111;}
+.l6-header-sub{font-size:12px;color:#888;margin-top:4px;}
+.l6-header-meta{text-align:right;font-size:12px;color:#888;white-space:nowrap;}
+.l6-header-meta strong{color:#333;font-size:14px;}
+.l6-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.l6-kpi{background:#fff;border-radius:12px;padding:18px 20px;border:1px solid #EAEAEA;}
+.l6-kpi-label{font-size:12px;color:#888;margin-bottom:8px;}
+.l6-kpi-num{font-size:26px;font-weight:600;color:#111;line-height:1;}
+.l6-kpi-delta{font-size:12px;margin-top:7px;}
+.l6-up{color:#1D9E75;}.l6-dn{color:#D85A30;}.l6-neu{color:#888;}
+.l6-kpi-accent{border-top:3px solid #4B7BFF;}
+.l6-section-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.l6-section-row.l6-full{grid-template-columns:1fr;}
+.l6-card{background:#fff;border-radius:12px;padding:20px;border:1px solid #EAEAEA;}
+.l6-card-title{font-size:13px;font-weight:600;color:#333;margin-bottom:16px;}
+.l6-chart-wrap{position:relative;}
+.l6-chart-wrap svg{display:block;width:100%;overflow:visible;}
+.l6-axis-label{font-size:10px;fill:#aaa;}
+.l6-grid-line{stroke:#F0F0F0;stroke-width:1;}
+.l6-chart-line{fill:none;stroke-width:2;}
+.l6-bar-rect{rx:3;}
+.l6-table-wrap{overflow-x:auto;}
+.l6-table{width:100%;border-collapse:collapse;font-size:12px;}
+.l6-table thead th{text-align:right;font-weight:600;font-size:11px;color:#888;padding:8px 12px;border-bottom:1px solid #EEE;white-space:nowrap;background:#fff;}
+.l6-table thead th:first-child{text-align:left;}
+.l6-table tbody td{text-align:right;padding:9px 12px;border-bottom:1px solid #F5F5F5;color:#333;white-space:nowrap;}
+.l6-table tbody td:first-child{text-align:left;color:#555;}
+.l6-table tbody tr:first-child td{font-weight:600;color:#111;background:#FAFBFF;}
+.l6-table tbody tr:hover{background:#FAFAFA;}
+.l6-red-cell{color:#D85A30!important;}
+.l6-green-cell{color:#1D9E75!important;}
+.l6-legend{display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap;}
+.l6-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#888;}
+.l6-legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.l6-legend-line{width:18px;height:2px;flex-shrink:0;}
+.l6-tooltip{position:fixed;background:rgba(30,30,30,0.88);color:#fff;padding:7px 12px;border-radius:8px;font-size:12px;pointer-events:none;display:none;z-index:999;white-space:nowrap;line-height:1.7;}
+@media(max-width:760px){.l6-header{align-items:flex-start;flex-direction:column;}.l6-header-meta{text-align:left;}.l6-kpi-row,.l6-section-row{grid-template-columns:1fr;}}
+<!-- L6_QW_END -->
 </style>
 </head>
 <body>
@@ -128,6 +170,7 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
   <div class="page-nav-inner">
     <button class="pnav-btn active" onclick="switchPage('daily')">日销看板</button>
     <button class="pnav-btn" onclick="switchPage('goods')">商品日看板</button>
+    <button class="pnav-btn" onclick="switchPage('l6')">企微L6下单情况</button>
   </div>
 </nav>
 
@@ -144,7 +187,7 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
     <div class="hsub">618 vs 双十一 · 已内置最新表格数据 · 上传 Excel 自动更新全部图表</div>
   </div>
   <div class="badges">
-    <span class="badge live" id="dbadge">Auto updated: 2026-05-20 11:51:45</span>
+    <span class="badge live" id="dbadge">Auto updated: 2026-05-20 14:38:28</span>
     <span class="badge" id="tbadge" style="display:none;"></span>
   </div>
 </div>
@@ -473,6 +516,74 @@ tr.ttl td{font-weight:600;border-top:1px solid #d3d1c7;background:#fafaf8;}
 <div class="footer">仅供内部参考 · 数据来源：有赞后台 · 商品维度</div>
 </div><!-- /page-goods -->
 
+<!-- L6_QW_START -->
+<!-- ════════════════════════════════════════
+     页面三：企微L6下单情况
+════════════════════════════════════════ -->
+<div class="page" id="page-l6">
+  <div class="l6-page">
+    <div class="l6-header">
+      <div>
+        <div class="l6-header-title">企微 L6 下单日看板</div>
+        <div class="l6-header-sub">L6 私域用户 · 总人数 508 人 · 数据周期：2026-05-08 至 2026-05-19</div>
+      </div>
+      <div class="l6-header-meta">最新更新日期<br><strong>2026-05-19</strong></div>
+    </div>
+
+    <div class="l6-kpi-row" id="l6KpiRow"></div>
+
+    <div class="l6-section-row">
+      <div class="l6-card">
+        <div class="l6-card-title">支付人数 · 每日趋势</div>
+        <div class="l6-chart-wrap"><svg id="l6c1" height="170"></svg></div>
+      </div>
+      <div class="l6-card">
+        <div class="l6-card-title">GMV · 每日趋势</div>
+        <div class="l6-chart-wrap"><svg id="l6c2" height="170"></svg></div>
+      </div>
+    </div>
+
+    <div class="l6-section-row">
+      <div class="l6-card">
+        <div class="l6-card-title">客单价 · 每日</div>
+        <div class="l6-chart-wrap"><svg id="l6c3" height="170"></svg></div>
+      </div>
+      <div class="l6-card">
+        <div class="l6-card-title">支付转化率 & 退款率</div>
+        <div class="l6-legend">
+          <div class="l6-legend-item"><div class="l6-legend-dot" style="background:#4B7BFF;"></div>支付转化率</div>
+          <div class="l6-legend-item"><div class="l6-legend-dot" style="background:#FF6B6B;"></div>退款率</div>
+        </div>
+        <div class="l6-chart-wrap"><svg id="l6c4" height="148"></svg></div>
+      </div>
+    </div>
+
+    <div class="l6-card">
+      <div class="l6-card-title">每日明细数据</div>
+      <div class="l6-table-wrap">
+        <table class="l6-table">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>L6人数</th>
+              <th>支付人数</th>
+              <th>支付转化率</th>
+              <th>GMV (元)</th>
+              <th>客单价 (元)</th>
+              <th>退款率</th>
+              <th>L6占自营GMV</th>
+              <th>自营GMV (元)</th>
+            </tr>
+          </thead>
+          <tbody id="l6Tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="l6-tooltip" id="l6Tt"></div>
+</div><!-- /page-l6 -->
+<!-- L6_QW_END -->
+
 </div><!-- /pg -->
 
 <!-- ════════════════════════════════════════
@@ -489,6 +600,15 @@ function switchPage(id) {
       if(window.gCDaily && window.gCDaily.update) gCDaily.update();
       if(window.gCCum && window.gCCum.update) gCCum.update();
     }, 50);
+  }
+  if(id==='l6'){
+    setTimeout(function(){ if(typeof l6DrawCharts==='function') l6DrawCharts(); }, 50);
+  }
+  if(id==='l6'){
+    setTimeout(function(){ if(typeof l6DrawCharts==='function') l6DrawCharts(); }, 50);
+  }
+  if(id==='l6'){
+    setTimeout(function(){ renderL6Charts(); }, 50);
   }
 }
 </script>
@@ -657,8 +777,92 @@ function gRenderTable(){
 
 gRenderTable();
 </script>
+<!-- L6_QW_SCRIPT_START -->
+<script>
+var L6_RAW_DATA=[{"date":"2026-05-08","d":"05/08","l6":508,"pay":82,"gmv":198597.71,"ref":0.1071,"aov":2421.92329268293,"cvr":0.161417322834646,"l6sh":0.232092289840287,"sy":855684.22},{"date":"2026-05-09","d":"05/09","l6":508,"pay":103,"gmv":273336.41,"ref":0.0816,"aov":2653.75155339806,"cvr":0.202755905511811,"l6sh":0.214770540977279,"sy":1272690.42},{"date":"2026-05-10","d":"05/10","l6":508,"pay":127,"gmv":321837.01,"ref":0.0951,"aov":2534.14968503937,"cvr":0.25,"l6sh":0.212075616334671,"sy":1517557.82},{"date":"2026-05-11","d":"05/11","l6":508,"pay":140,"gmv":356183.61,"ref":0.0892,"aov":2544.16864285714,"cvr":0.275590551181102,"l6sh":0.207501148154004,"sy":1716538.02},{"date":"2026-05-12","d":"05/12","l6":508,"pay":160,"gmv":383566.01,"ref":0.0985,"aov":2397.2875625,"cvr":0.31496062992126,"l6sh":0.200694182955394,"sy":1911196.45},{"date":"2026-05-13","d":"05/13","l6":508,"pay":200,"gmv":522645.91,"ref":0.0838,"aov":2613.22955,"cvr":0.393700787401575,"l6sh":0.20693158326666,"sy":2525694.25},{"date":"2026-05-14","d":"05/14","l6":508,"pay":212,"gmv":544494.91,"ref":0.0804,"aov":2568.37221698113,"cvr":0.417322834645669,"l6sh":0.204230210189883,"sy":2666084.07},{"date":"2026-05-15","d":"05/15","l6":508,"pay":226,"gmv":579323.51,"ref":0.0814,"aov":2563.37836283186,"cvr":0.44488188976378,"l6sh":0.204392728475318,"sy":2834364.58},{"date":"2026-05-16","d":"05/16","l6":508,"pay":229,"gmv":588343.41,"ref":0.0802,"aov":2569.18519650655,"cvr":0.450787401574803,"l6sh":0.199380314230284,"sy":2950860.08},{"date":"2026-05-17","d":"05/17","l6":508,"pay":234,"gmv":595485.91,"ref":0.0796,"aov":2544.81158119658,"cvr":0.460629921259843,"l6sh":0.196315177480537,"sy":3033315.7},{"date":"2026-05-18","d":"05/18","l6":508,"pay":242,"gmv":609296.51,"ref":0.0797,"aov":2517.75417355372,"cvr":0.476377952755905,"l6sh":0.193666564847839,"sy":3146111.0},{"date":"2026-05-19","d":"05/19","l6":508,"pay":249,"gmv":629599.32,"ref":0.0778,"aov":2528.5113253012,"cvr":0.490157480314961,"l6sh":0.194597646384051,"sy":3235390.21}];
+var L6_CHARTED=false;
+function l6Fmt(v,d){return Number(v||0).toLocaleString('zh-CN',{minimumFractionDigits:d||0,maximumFractionDigits:d||0});}
+function l6Pct(v){return (Number(v||0)*100).toFixed(1)+'%';}
+function l6RenderAll(){
+  var data=L6_RAW_DATA,n=data.length,latest=data[n-1],prev=data[n-2]||latest;
+  var kpis=[
+    {label:'累计支付人数',val:latest.pay+'人',delta:latest.pay-prev.pay,unit:'人',accent:true},
+    {label:'累计 GMV',val:'¥'+l6Fmt(latest.gmv),delta:latest.gmv-prev.gmv,prefix:true},
+    {label:'最新客单价',val:'¥'+l6Fmt(latest.aov,0),delta:latest.aov-prev.aov,prefix:true},
+    {label:'支付转化率',val:l6Pct(latest.cvr),delta:latest.cvr-prev.cvr,pctDelta:true}
+  ];
+  document.getElementById('l6KpiRow').innerHTML=kpis.map(function(k){
+    var d=k.delta,cls=d>=0?'l6-up':'l6-dn';
+    var txt=k.pctDelta?(d>=0?'▲':'▼')+' '+(Math.abs(d)*100).toFixed(2)+'pp':(d>=0?'▲':'▼')+' '+(k.prefix?'¥':'')+l6Fmt(Math.abs(d),0)+(k.unit||'');
+    return '<div class="l6-kpi'+(k.accent?' l6-kpi-accent':'')+'"><div class="l6-kpi-label">'+k.label+'</div><div class="l6-kpi-num">'+k.val+'</div><div class="l6-kpi-delta '+cls+'">环比 '+txt+'</div></div>';
+  }).join('');
+  document.getElementById('l6Tbody').innerHTML=data.slice().reverse().map(function(r){
+    return '<tr><td>'+r.d+'</td><td>'+l6Fmt(r.l6)+'</td><td>'+l6Fmt(r.pay)+'</td><td>'+l6Pct(r.cvr)+'</td><td>¥'+l6Fmt(r.gmv)+'</td><td>¥'+l6Fmt(r.aov,0)+'</td><td class="'+(r.ref>0.1?'l6-red-cell':'')+'">'+l6Pct(r.ref)+'</td><td>'+l6Pct(r.l6sh)+'</td><td>¥'+l6Fmt(r.sy)+'</td></tr>';
+  }).join('');
+  l6DrawCharts();
+}
+function l6Clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function l6MakeSvg(id,values,opts){
+  var data=L6_RAW_DATA,n=data.length,svg=document.getElementById(id);l6Clear(svg);
+  var W=svg.parentElement.offsetWidth||500,H=parseInt(svg.getAttribute('height')),pad={l:48,r:16,t:10,b:28},cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var xs=data.map(function(_,i){return pad.l+(n===1?0:i/(n-1)*cw);});
+  var minV=opts.min!==undefined?opts.min:Math.min.apply(null,values)*0.93,maxV=Math.max.apply(null,values)*1.05||1;
+  var ys=values.map(function(v){return pad.t+ch-(v-minV)/((maxV-minV)||1)*ch;});
+  [0,.25,.5,.75,1].forEach(function(t){
+    var y=pad.t+ch*(1-t),v=minV+(maxV-minV)*t,label=opts.fmtY?opts.fmtY(v):l6Fmt(v,0);
+    svg.insertAdjacentHTML('beforeend','<line x1="'+pad.l+'" x2="'+(W-pad.r)+'" y1="'+y+'" y2="'+y+'" class="l6-grid-line"/><text x="'+(pad.l-5)+'" y="'+(y+4)+'" class="l6-axis-label" text-anchor="end">'+label+'</text>');
+  });
+  data.forEach(function(d,i){if(i%2===0||i===n-1)svg.insertAdjacentHTML('beforeend','<text x="'+xs[i]+'" y="'+(H-6)+'" class="l6-axis-label" text-anchor="middle">'+d.d+'</text>');});
+  return {svg:svg,xs:xs,ys:ys,pad:pad,cw:cw,ch:ch,W:W,H:H,minV:minV,maxV:maxV};
+}
+function l6LineChart(id,values,color,opts){
+  opts=opts||{};var data=L6_RAW_DATA,n=data.length,c=l6MakeSvg(id,values,opts);
+  var pts=c.xs.map(function(x,i){return x+','+c.ys[i];}).join(' ');
+  var area='M '+c.xs[0]+','+c.ys[0]+' '+c.xs.slice(1).map(function(x,i){return 'L'+x+','+c.ys[i+1];}).join(' ')+' L'+c.xs[n-1]+','+(c.pad.t+c.ch)+' L'+c.xs[0]+','+(c.pad.t+c.ch)+' Z';
+  c.svg.insertAdjacentHTML('beforeend','<defs><linearGradient id="g'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+color+'" stop-opacity="0.18"/><stop offset="100%" stop-color="'+color+'" stop-opacity="0.01"/></linearGradient></defs><path d="'+area+'" fill="url(#g'+id+')"/><polyline points="'+pts+'" class="l6-chart-line" stroke="'+color+'"/>');
+  c.xs.forEach(function(x,i){
+    var el=document.createElementNS('http://www.w3.org/2000/svg','circle');el.setAttribute('cx',x);el.setAttribute('cy',c.ys[i]);el.setAttribute('r',i===n-1?5:3.5);el.setAttribute('fill',color);el.setAttribute('stroke','#fff');el.setAttribute('stroke-width','1.5');
+    el.addEventListener('mouseenter',function(){var tt=document.getElementById('l6Tt');tt.innerHTML=opts.ttFmt?opts.ttFmt(i):data[i].d;tt.style.display='block';});
+    el.addEventListener('mousemove',function(e){var tt=document.getElementById('l6Tt');tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';});
+    el.addEventListener('mouseleave',function(){document.getElementById('l6Tt').style.display='none';});
+    c.svg.appendChild(el);
+  });
+}
+function l6DualLineChart(id,v1,v2,c1,c2,opts){
+  opts=opts||{};var data=L6_RAW_DATA,n=data.length,c=l6MakeSvg(id,v1.concat(v2),opts);
+  [v1,v2].forEach(function(vals,li){
+    var col=li===0?c1:c2,ys=vals.map(function(v){return c.pad.t+c.ch-(v-c.minV)/((c.maxV-c.minV)||1)*c.ch;}),pts=c.xs.map(function(x,i){return x+','+ys[i];}).join(' ');
+    c.svg.insertAdjacentHTML('beforeend','<polyline points="'+pts+'" class="l6-chart-line" stroke="'+col+'" stroke-dasharray="'+(li===1?'5,3':'')+'"/>');
+    c.xs.forEach(function(x,i){
+      var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('cx',x);dot.setAttribute('cy',ys[i]);dot.setAttribute('r',i===n-1?4.8:4);dot.setAttribute('fill',col);dot.setAttribute('stroke','#fff');dot.setAttribute('stroke-width','1.5');dot.style.cursor='pointer';
+      dot.addEventListener('mouseenter',function(){var tt=document.getElementById('l6Tt'),r=data[i];tt.innerHTML='<b>'+r.d+'</b><br>支付转化率：'+l6Pct(r.cvr)+'<br>退款率：'+l6Pct(r.ref);tt.style.display='block';});
+      dot.addEventListener('mousemove',function(e){var tt=document.getElementById('l6Tt');tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';});
+      dot.addEventListener('mouseleave',function(){document.getElementById('l6Tt').style.display='none';});
+      c.svg.appendChild(dot);
+    });
+  });
+}
+function l6DrawCharts(){
+  var data=L6_RAW_DATA;
+  l6LineChart('l6c1',data.map(function(r){return r.pay;}),'#4B7BFF',{ttFmt:function(i){return '<b>'+data[i].d+'</b><br>支付人数：'+l6Fmt(data[i].pay)+'人';}});
+  l6LineChart('l6c2',data.map(function(r){return r.gmv;}),'#1D9E75',{fmtY:function(v){return '¥'+l6Fmt(v/10000,0)+'万';},ttFmt:function(i){return '<b>'+data[i].d+'</b><br>GMV：¥'+l6Fmt(data[i].gmv);}});
+  l6LineChart('l6c3',data.map(function(r){return r.aov;}),'#F59E0B',{fmtY:function(v){return '¥'+l6Fmt(v,0);},ttFmt:function(i){return '<b>'+data[i].d+'</b><br>客单价：¥'+l6Fmt(data[i].aov,0);}});
+  l6DualLineChart('l6c4',data.map(function(r){return r.cvr;}),data.map(function(r){return r.ref;}),'#4B7BFF','#FF6B6B',{min:0,fmtY:function(v){return (v*100).toFixed(0)+'%';}});
+  L6_CHARTED=true;
+}
+l6RenderAll();
+window.addEventListener('resize',function(){if(document.getElementById('page-l6')&&document.getElementById('page-l6').classList.contains('active'))l6DrawCharts();});
+</script>
+<!-- L6_QW_SCRIPT_END -->
+
 </body>
 </html>
+
+
+
+
 
 
 
